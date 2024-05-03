@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <title>Registrar Usuario</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+</head>
+<body>
+    <!-- {% csrf_token %} -->
+    <form method="post">
+        <h2>Registrar </h2>
+        <input type="text" name="nombre" placeholder="Nombre" required>
+        <input type="text" name="correo" placeholder="Correo electrónico" required>
+        <input type="password" name="contraseña" placeholder="Contraseña" required>
+        <input type="password" name="confirmar_contraseña" placeholder="Confirmar contraseña" required>
+        <div class="buttons">
+            <a href="home" class="btn">Atrás</a>
+            <input type="submit" value="Registrar">
+        </div>
+    </form>
+</body>
+</html>
+
