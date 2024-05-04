@@ -17,3 +17,8 @@ def reguser(request):
 def edituser(request):
     context={}
     return render(request, 'registration/edituser.html', context)
+
+
+def crud_mp(request):
+    context={}
+    return render(request, 'inventary/crud_mp.html', context)
