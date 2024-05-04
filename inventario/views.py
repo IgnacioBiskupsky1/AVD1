@@ -22,3 +22,7 @@ def edituser(request):
 def crud_mp(request):
     context={}
     return render(request, 'inventary/crud_mp.html', context)
+
+def crud_insu(request):
+    context={}
+    return render(request, 'inventary/crud_insu.html', context)

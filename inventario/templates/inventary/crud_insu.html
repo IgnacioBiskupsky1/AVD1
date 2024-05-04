@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Insumos</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h2 class="mt-5 mb-4">Formulario de Insumos</h2>
+        <form id="contactForm" action="/enviar_datos" method="POST">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="tipo">Tipo de envase:</label>
+                <input type="text" class="form-control" id="tipo" name="tipo" required>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary mr-2">Enviar</button>
+                <button type="button" class="btn btn-secondary" onclick="cancelar()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS (opcional, solo si necesitas funcionalidades JS de Bootstrap) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function cancelar() {
+            // Aquí puedes agregar la lógica para redireccionar o realizar cualquier otra acción al hacer clic en el botón "Cancelar"
+            alert('Operación cancelada');
+        }
+    </script>
+</body>
+</html>
