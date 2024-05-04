@@ -14,6 +14,6 @@ def reguser(request):
     context={}
     return render(request, 'registration/reguser.html', context)
 
-#def edituser(request):
-#    context={}
-#    return render(request, 'registration/edituser.html', context)
+def edituser(request):
+    context={}
+    return render(request, 'registration/edituser.html', context)
