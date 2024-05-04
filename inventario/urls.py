@@ -8,6 +8,6 @@ urlpatterns = [
     path('reguser',views.reguser, name='reguser'),
     path('home',views.home, name='home'),
     path('edituser',views.edituser, name='edituser'),
-    
+    path('crud_mp',views.crud_mp, name='crud_mp'),
 ]
 
