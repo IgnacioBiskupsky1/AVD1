@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block titulo %}Eliminar Insumo{% endblock %}
+
+{% block contenido %}
+
+<h1>¿Estás seguro que deseas eliminar la Materia Prima "{{ insumo.in_nombre }}"?</h1>
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" value="Eliminar">
+        <a class="btn btn-danger" href="/crud_mp">Cancelar</a>
+    </form>
+
+{% endblock %}

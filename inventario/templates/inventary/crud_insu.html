@@ -1,41 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de Insumos</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container">
-        <h2 class="mt-5 mb-4">Formulario de Insumos</h2>
-        <form id="contactForm" action="/enviar_datos" method="POST">
-            <div class="form-group">
-                <label for="nombre">Nombre:</label>
-                <input type="text" class="form-control" id="nombre" name="nombre" required>
-            </div>
-            <div class="form-group">
-                <label for="tipo">Tipo de envase:</label>
-                <input type="text" class="form-control" id="tipo" name="tipo" required>
-            </div>
-            
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary mr-2">Enviar</button>
-                <button type="button" class="btn btn-secondary" onclick="cancelar()">Cancelar</button>
-            </div>
-        </form>
+{%  extends "base.html" %}
+
+{% block titulo%} Insumos {% endblock %}
+
+{% block contenido %} 
+<br>
+<div class="card">
+    <div class="card-header">
+        <a name="" id="" class="btn btn-success" href="/ingresar_insumo" role="button">Agregar Insumo</a>
     </div>
+    <div class="card-body">
+        <h5 class="card-title">Listado de Insumos</h5>
 
-    <!-- Bootstrap JS (opcional, solo si necesitas funcionalidades JS de Bootstrap) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <div class="table-responsive">
+            <table class="table table-primary">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Descripcion</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for insu in insus %} 
+                    <tr>
+                                               
+                        <td scope="row">{{ insu.insumo_id }}</td>
+                        <td>{{ insu.in_nombre }}</td>
+                        <td>{{ insu.in_desc }}</td>
+                        <td>
+                            <a name="" id="" class="btn btn-info" href="/editar_insumo/{{ insu.insumo_id }}" role="button">Editar</a> | 
+                            <a name="" id="" class="btn btn-danger" href="/eliminar_insumo/{{ insu.insumo_id }}" role="button">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
 
-    <script>
-        function cancelar() {
-            // Aquí puedes agregar la lógica para redireccionar o realizar cualquier otra acción al hacer clic en el botón "Cancelar"
-            alert('Operación cancelada');
-        }
-    </script>
-</body>
-</html>
+{% endblock %} 
