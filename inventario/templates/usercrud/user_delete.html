@@ -1,0 +1,19 @@
+<!-- templates/usercrud/user_delete.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Borrar Usuario</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <h1>Eliminar usuario</h1>
+    <p>¿Estas seguro "{{ user.username }}"?</p>
+    <form action="{% url 'usercrud:user_delete' user.pk %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Borrar</button>
+    </form>
+    <a href="{% url 'usercrud:user_list' %}">Cancelar</a>
+</body>
+</html>

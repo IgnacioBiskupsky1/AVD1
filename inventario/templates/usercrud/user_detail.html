@@ -1,0 +1,21 @@
+<!-- usercrud/templates/usercrud/user_detail.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Informacion de Usuario</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <h1>Información de Usuario</h1>
+    <p><strong>Nombre de Usuario:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <a href="{% url 'usercrud:user_update' user.pk %}">Editar</a>
+    <form action="{% url 'usercrud:user_delete' user.pk %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" onclick="return confirm('Are you sure you want to delete this user?')">Borrar</button>
+    </form>
+    <a href="{% url 'usercrud:user_list' %}">Volver a lista de Usuarios</a>
+</body>
+</html>
