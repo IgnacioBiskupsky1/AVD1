@@ -16,7 +16,20 @@ class InfoAditivo(models.Model):
     adtv_nom = models.CharField(max_length=60, blank=True, null=True)
     adtv_dens = models.CharField(max_length=10, blank=True, null=True)
     def __str__(self):
-        return self.name
+        return self.adtv_nom
+
+class Productos(models.Model):
+    productos_id = models.AutoField(primary_key=True)
+    productos_nom = models.CharField(max_length=50)
+    def __str__(self):
+        return self.productos_nom
+    
+class CompProducto(models.Model):
+    comp_producto_id = models.AutoField(primary_key=True)
+    productos = models.ForeignKey(Productos, on_delete=models.CASCADE)
+    info_aditivo = models.ForeignKey(InfoAditivo, on_delete=models.CASCADE)
+    pp = models.DecimalField(max_digits=5, decimal_places=5)
+    vv = models.DecimalField(max_digits=6, decimal_places=5, default=1.00000)
 
 class Mezcla(models.Model):
     mezcla_id = models.AutoField(primary_key=True)
@@ -66,3 +79,4 @@ class Insumo(models.Model):
     in_desc = models.CharField(max_length=150, blank=True, null=True)
     def __str__(self):
         return self.name
+    

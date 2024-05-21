@@ -4,7 +4,7 @@
 
 {% block contenido %}
 
-<h1>¿Estás seguro que deseas eliminar la Materia Prima "{{ insumo.in_nombre }}"?</h1>
+<h1>¿Estás seguro que deseas eliminar la Materia Prima "{{ aditivo.adtv_nom }}"?</h1>
     <form method="post">
         {% csrf_token %}
         <input type="submit" value="Eliminar">

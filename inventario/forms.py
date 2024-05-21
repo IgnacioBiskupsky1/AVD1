@@ -1,5 +1,5 @@
 from django import forms
-from .models import InfoAditivo, Insumo
+from .models import InfoAditivo, Insumo, Productos, CompProducto
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -31,3 +31,22 @@ class UserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email')
+
+class ProductosForm(forms.ModelForm):
+    class Meta:
+        model = Productos
+        fields = ['productos_nom']
+        labels = {
+            'productos_nom': 'Nombre del Producto',           
+        }
+
+class CompProductoForm(forms.ModelForm):
+    class Meta:
+        model = CompProducto
+        fields = ['productos', 'info_aditivo', 'pp', 'vv']
+        labels = {
+            'productos': 'Nombre del Producto',
+            'info_aditivo': 'Nombre del Aditivo', 
+            'pp': 'Porcentaje Peso Peso', 
+            'vv': 'Porcentaje Volumen Volumen'
+        }
