@@ -15,13 +15,13 @@
             <div class="form-group">
                 <label for="product-select">Seleccionar Producto:</label>
                 <select class="form-control" id="product-select" name="producto">
-                    <option value="">Todos</option>
+                    <option value="">Ninguno</option>
                     {% for producto in productos %}
                     <option value="{{ producto }}" {% if producto == producto_seleccionado %}selected{% endif %}>{{ producto }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <button type="submit" class="btn btn-primary">Mostrar</button>
         </form>
 
         <div class="table-responsive">

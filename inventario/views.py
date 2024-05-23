@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
-from .forms import UserForm, MpForm, InfoAditivoForm, InForm, ProductosForm, CompProductoForm
-from .models import InfoAditivo, Insumo, Productos, CompProducto
+from .forms import UserForm, MpForm, InfoAditivoForm, InForm, ProductosForm, CompProductoForm, StockAditivoForm, StockProductosForm
+from .models import InfoAditivo, Insumo, Productos, CompProducto, StockAditivo, StockProductos
+from django.http import JsonResponse
+from .services import producir_producto
 from django.http import HttpResponse
 
 
@@ -172,10 +174,6 @@ def eliminar_producto(request, productos_id):
 
 ##################################### METODOS COMPOSICION #####################################
 
-#def crud_comp(request):
-#    comps = CompProducto.objects.all()
-#    return render(request, 'inventary/comp_producto/crud_comp.html', {'comps': comps}) 
-
 def crud_comp(request):
     
     producto_seleccionado = request.GET.get('producto', None)
@@ -183,7 +181,7 @@ def crud_comp(request):
     if producto_seleccionado:
         comps = CompProducto.objects.filter(productos__productos_nom = producto_seleccionado)
     else:
-        comps = CompProducto.objects.all()
+        comps = CompProducto.objects.none
     
     productos = CompProducto.objects.values_list('productos__productos_nom', flat=True).distinct()
     
@@ -217,3 +215,79 @@ def eliminar_comp(request, comp_producto_id):
         composicion.delete()
         return redirect('/crud_comp')  # Redirigir a la página de listado de productos
     return render(request, 'inventary/comp_producto/eliminar_comp.html', {'composicion': composicion})
+
+##################################### TRANSACCION #####################################
+
+# myapp/views.py
+
+def producir_producto_view(request):
+    if request.method == 'POST':
+        producto_id = request.POST.get('producto')
+        cantidad = request.POST.get('cantidad')
+        try:
+            producto_id = int(producto_id)
+            cantidad = float(cantidad)
+            nuevo_stock_producto = producir_producto(producto_id=producto_id, cantidad_producir=cantidad)
+            return JsonResponse({'status': 'success', 'message': f'Se produjo exitosamente: {nuevo_stock_producto}'})
+        except ValueError as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': f'Error inesperado: {e}'})
+    else:
+        productos = Productos.objects.all()
+        return render(request, 'producir_producto.html', {'productos': productos})
+
+##################################### METODOS STOCK PRODUCTOS #####################################
+
+def crud_stock_prod(request):
+    stockprods = StockProductos.objects.all()
+    return render(request, 'inventary/stock_producto/crud_stock_prod.html', {'stockprods': stockprods}) 
+
+def ingresar_stock_prod(request):
+    if request.method == 'POST':
+        form = StockProductosForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/crud_stock_prod')  # Cambia 'home' por el nombre de tu URL de inicio
+    else:
+        form = StockProductosForm()
+    return render(request, 'inventary/stock_producto/ingresar_stock_prod.html', {'form': form})
+
+def editar_stock_prod(request, stock_producto_id):
+    stockprod = get_object_or_404(StockProductos, stock_producto_id=stock_producto_id)
+    if request.method == 'POST':
+        form = StockProductosForm(request.POST, instance=stockprod)
+        if form.is_valid():
+            form.save()
+            return redirect('/crud_stock_prod')  
+    else:
+        form = StockProductosForm(instance=stockprod)
+    return render(request, 'inventary/stock_producto/editar_stock_prod.html', {'form': form})
+
+
+##################################### METODOS STOCK MP #####################################
+
+def crud_stock_mp(request):
+    stockmps = StockAditivo.objects.all()
+    return render(request, 'inventary/stock_mp/crud_stock_mp.html', {'stockmps': stockmps}) 
+
+def ingresar_stock_mp(request):
+    if request.method == 'POST':
+        form = StockAditivoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/crud_stock_mp') 
+    else:
+        form = StockAditivoForm()
+    return render(request, 'inventary/stock_mp/ingresar_stock_mp.html', {'form': form})
+
+def editar_stock_mp(request, stock_ad_id):
+    stockmp = get_object_or_404(StockAditivo, stock_ad_id=stock_ad_id)
+    if request.method == 'POST':
+        form = StockAditivoForm(request.POST, instance=stockmp)
+        if form.is_valid():
+            form.save()
+            return redirect('/crud_stock_mp')  
+    else:
+        form = StockAditivoForm(instance=stockmp)
+    return render(request, 'inventary/stock_mp/editar_stock_mp.html', {'form': form})

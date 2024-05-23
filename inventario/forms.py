@@ -1,5 +1,5 @@
 from django import forms
-from .models import InfoAditivo, Insumo, Productos, CompProducto
+from .models import InfoAditivo, Insumo, Productos, CompProducto, StockAditivo, StockProductos
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -50,3 +50,30 @@ class CompProductoForm(forms.ModelForm):
             'pp': 'Porcentaje Peso Peso', 
             'vv': 'Porcentaje Volumen Volumen'
         }
+
+class StockAditivoForm(forms.ModelForm):
+    class Meta:
+        model = StockAditivo
+        fields = ['nomAditivo', 'stock_ad_cant']
+        labels = {
+            'nomAditivo': 'Nombre del Aditivo',
+            'stock_ad_cant': 'Cantidad del Aditivo'  
+        }
+
+class StockProductosForm(forms.ModelForm):
+    class Meta:
+        model = StockProductos
+        fields = ['productos', 'stock_prod_cant']
+        labels = {            
+            'productos': 'Nombre del producto',
+            'stock_prod_cant': 'Cantidad del Producto'  
+        }
+
+#class StockProductoForm(forms.ModelForm):
+#    class Meta:
+#        model = StockProducto
+#        fields = ['stock_producto_id', 'stock_prod_cant']
+#        labels = {            
+#            'stock_producto_id': 'Id del stock de producto',
+#            'stock_prod_cant': 'Cantidad del Producto'  
+#        }

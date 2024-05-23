@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
+from .views import producir_producto_view
 
 app_name = 'usercrud'
 
@@ -41,6 +42,18 @@ urlpatterns = [
     path('ingresar_comp/',views.ingresar_comp, name='ingresar_comp'),
     path('editar_comp/<int:comp_producto_id>/',views.editar_comp, name='editar_comp'),
     path('eliminar_comp/<int:comp_producto_id>/',views.eliminar_comp, name='eliminar_comp'),
+
+
+    path('producir/', producir_producto_view, name='producir_producto'),
     
+
+    path('crud_stock_prod/', views.crud_stock_prod, name='crud_stock_prod'),
+    path('ingresar_stock_prod/',views.ingresar_stock_prod, name='ingresar_stock_prod'),
+    path('editar_stock_prod/<int:stock_producto_id>/',views.editar_stock_prod, name='editar_stock_prod'),
+    
+    
+    path('crud_stock_mp/', views.crud_stock_mp, name='crud_stock_mp'),
+    path('ingresar_stock_mp/',views.ingresar_stock_mp, name='ingresar_stock_mp'),
+    path('editar_stock_mp/<int:stock_ad_id>/',views.editar_stock_mp, name='editar_stock_mp'),
 ]
 
