@@ -1,12 +1,13 @@
+
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
-from .views import producir_producto_view
+#from .views import producir_producto_view
 
 app_name = 'usercrud'
 
+
 urlpatterns = [
-    
     path('', views.login_user,  name='login_user'),
     path('<int:pk>/', views.user_detail, name='user_detail'),
     path('new/', views.user_create, name='user_create'),
@@ -17,7 +18,7 @@ urlpatterns = [
     path('login_user/', views.login_user, name='login_user'),
     path('user_list/', views.user_list,  name='user_list'),
     path('welcome_user/',views.welcome_user, name='welcome_user'),
-
+    path('cruds/',views.cruds, name='cruds'),
 
     path('ingresar_mp/',views.ingresar_mp, name='ingresar_mp'),
     path('editar_mp/<int:adtv_id>/',views.editar_mp, name='editar_mp'),
@@ -43,9 +44,13 @@ urlpatterns = [
     path('editar_comp/<int:comp_producto_id>/',views.editar_comp, name='editar_comp'),
     path('eliminar_comp/<int:comp_producto_id>/',views.eliminar_comp, name='eliminar_comp'),
 
+    path('crud_producto_copec/', views.crud_producto_copec, name='crud_producto_copec'),
+    path('ingresar_producto_copec/',views.ingresar_producto_copec, name='ingresar_producto_copec'),
+    path('editar_producto_copec/<int:prod_copec_id>/',views.editar_producto_copec, name='editar_producto_copec'),
+    path('eliminar_producto_copec/<int:prod_copec_id>/',views.eliminar_producto_copec, name='eliminar_producto_copec'),
 
-    path('producir/', producir_producto_view, name='producir_producto'),
-    
+    #path('producir/', views.producir_producto_view, name='producir_producto'),
+    path('orden_de_prod/', views.orden_de_prod, name='orden_de_prod'),
 
     path('crud_stock_prod/', views.crud_stock_prod, name='crud_stock_prod'),
     path('ingresar_stock_prod/',views.ingresar_stock_prod, name='ingresar_stock_prod'),
@@ -55,5 +60,10 @@ urlpatterns = [
     path('crud_stock_mp/', views.crud_stock_mp, name='crud_stock_mp'),
     path('ingresar_stock_mp/',views.ingresar_stock_mp, name='ingresar_stock_mp'),
     path('editar_stock_mp/<int:stock_ad_id>/',views.editar_stock_mp, name='editar_stock_mp'),
-]
+    
+    path('crud_stock_insumo/', views.crud_stock_insumo, name='crud_stock_insumo'),
+    path('ingresar_stock_insumo/',views.ingresar_stock_insumo, name='ingresar_stock_insumo'),
+    path('editar_stock_insumo/<int:stock_in_id>/',views.editar_stock_insumo, name='editar_stock_insumo'),
+
+    ]
 

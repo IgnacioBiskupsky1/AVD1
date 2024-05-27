@@ -1,0 +1,33 @@
+{%  extends "base.html" %}
+
+{% block titulo%} Producir Producto {% endblock %}
+
+{% block contenido %}
+<div class="row -myDiv">
+    <h1>Gestion de Plataforma</h1><br>
+    <div class="col">        
+        <h2>Materias Primas<h2>
+        <a href="/crud_mp">Gestión de Materias Primas</a><br>
+        <a href="/crud_stock_mp">Gestión de Stock Materias Primas</a><br><br>
+    </div> 
+    <div class="col">
+        <h2>Productos<h2>
+        <a href="/crud_producto">Gestión de Productos</a><br>
+        <a href="/crud_comp">Gestión de Composiciones</a><br>
+        <a href="/crud_producto_copec">Gestión de Productos Copec</a><br>
+        <a href="/crud_stock_prod">Gestión de Stock de Productos</a><br><br>
+    </div>
+    <div class="col">
+        <h2>Insumos<h2>
+        <a href="/crud_insu">Gestión de Insumos</a><br>
+        <a href="/crud_stock_insumo">Gestión de Stock de Insumos</a><br>
+    </div>
+</div>
+
+
+
+
+
+
+
+{% endblock %} 

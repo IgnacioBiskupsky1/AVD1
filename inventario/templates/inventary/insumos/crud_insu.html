@@ -17,7 +17,9 @@
                     <tr>
                         <th scope="col">ID</th>
                         <th scope="col">Nombre</th>
-                        <th scope="col">Descripcion</th>
+                        <th scope="col">Volumen</th>
+                        <th scope="col">Envases/Caja</th>
+                        <th scope="col">Cajas/Pallet</th>
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
@@ -26,8 +28,10 @@
                     <tr>
                                                
                         <td scope="row">{{ insu.insumo_id }}</td>
-                        <td>{{ insu.in_nombre }}</td>
-                        <td>{{ insu.in_desc }}</td>
+                        <td>{{ insu.insumo_nom }}</td>
+                        <td>{{ insu.insumo_vol }}</td>
+                        <td>{{ insu.insumo_env_por_caja }}</td>
+                        <td>{{ insu.insumo_cajas_por_pallet }}</td>
                         <td>
                             <a name="" id="" class="btn btn-info" href="/editar_insumo/{{ insu.insumo_id }}" role="button">Editar</a> | 
                             <a name="" id="" class="btn btn-danger" href="/eliminar_insumo/{{ insu.insumo_id }}" role="button">Eliminar</a>

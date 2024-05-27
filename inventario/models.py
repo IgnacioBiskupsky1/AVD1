@@ -1,15 +1,24 @@
+#"""
 from django.db import models
 from django.contrib.auth.models import User
+
 
 # Create your models here.
 
 #Modelo de Insumos
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
 class Insumo(models.Model):
     insumo_id = models.AutoField(primary_key=True)
-    in_nombre = models.CharField(max_length=60, blank=True, null=True)
-    in_desc = models.CharField(max_length=150, blank=True, null=True)
+    insumo_nom = models.CharField(max_length=60, blank=True, null=True)    
+    insumo_vol = models.DecimalField(max_digits=3, decimal_places=1)
+    insumo_env_por_caja = models.DecimalField(max_digits=3, decimal_places=1)
+    insumo_cajas_por_pallet = models.DecimalField(max_digits=3, decimal_places=1)
+    insumo_desc = models.CharField(max_length=150, blank=True, null=True)
     def __str__(self):
-        return self.name
+        return self.insumo_nom
 
 class InfoAditivo(models.Model):
     adtv_id = models.AutoField(primary_key=True)
@@ -18,34 +27,53 @@ class InfoAditivo(models.Model):
     def __str__(self):
         return self.adtv_nom
 
-class Productos(models.Model):
-    productos_id = models.AutoField(primary_key=True)
-    productos_nom = models.CharField(max_length=50)
+class Producto(models.Model):
+    producto_id = models.AutoField(primary_key=True)
+    producto_nom = models.CharField(max_length=50)
     def __str__(self):
-        return self.productos_nom
-    
+        return self.producto_nom
+
 class CompProducto(models.Model):
     comp_producto_id = models.AutoField(primary_key=True)
-    productos = models.ForeignKey(Productos, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     info_aditivo = models.ForeignKey(InfoAditivo, on_delete=models.CASCADE)
     pp = models.DecimalField(max_digits=5, decimal_places=5)
     vv = models.DecimalField(max_digits=6, decimal_places=5, default=1.00000)
     def __str__(self):
-        return self.productos
+        return self.producto
+
+class ProdCopec(models.Model):
+    prod_copec_id = models.AutoField(primary_key=True)
+    prod_copec_cod = models.CharField(max_length=10, blank=True, null=True)
+    prod_copec_nom = models.CharField(max_length=60, blank=True, null=True)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    insumo = models.ForeignKey(Insumo, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.prod_copec_nom
+
 
 class StockAditivo(models.Model):
     stock_ad_id = models.AutoField(primary_key=True)
     nomAditivo = models.ForeignKey(InfoAditivo, on_delete=models.CASCADE)
-    stock_ad_cant = models.DecimalField(max_digits=10, decimal_places=2)
+    stock_ad_cant_lt = models.DecimalField(max_digits=10, decimal_places=2)
 
-class StockProductos(models.Model):
+class StockProducto(models.Model):
     stock_producto_id = models.AutoField(primary_key=True)
-    productos = models.ForeignKey(Productos, on_delete=models.CASCADE)
-    stock_prod_cant = models.DecimalField(max_digits=10, decimal_places=2)
+    prod_copec = models.ForeignKey(ProdCopec, on_delete=models.CASCADE)
+    stock_prod_cant_vol = models.DecimalField(max_digits=10, decimal_places=2)
+    stock_prod_cant_uni = models.DecimalField(max_digits=10, decimal_places=2)
 
+class StockInsumo(models.Model):
+    stock_in_id = models.AutoField(primary_key=True)
+    insumo = models.ForeignKey(Insumo, on_delete=models.CASCADE)
+    stock_in_cant_unit = models.DecimalField(max_digits=10, decimal_places=2)
+
+
+"""
 
 
 ###################################### ESTO NO SIRVE (...POR AHORA) #############################################
+
 
 #class StockProducto(models.Model):
 #    stock_producto_id = models.AutoField(primary_key=True)
@@ -79,9 +107,6 @@ class StockProductos(models.Model):
 #    id_color = models.AutoField(primary_key=True)
 #    descripcion = models.CharField(max_length=100)
 
-#class Profile(models.Model):
-#    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
 #class Glicol(models.Model):
 #    glicol_rang_id = models.AutoField(primary_key=True)
 #    min_glicol = models.IntegerField()
@@ -104,4 +129,4 @@ class StockProductos(models.Model):
 #    prod_tk_agua = models.IntegerField(null=True, blank=True)
 #    prod_tk_prod = models.IntegerField(null=True, blank=True)   
 
-   
+"""
