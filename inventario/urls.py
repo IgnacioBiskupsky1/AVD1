@@ -65,5 +65,9 @@ urlpatterns = [
     path('ingresar_stock_insumo/',views.ingresar_stock_insumo, name='ingresar_stock_insumo'),
     path('editar_stock_insumo/<int:stock_in_id>/',views.editar_stock_insumo, name='editar_stock_insumo'),
 
+    path('crud_orden_prod/', views.crud_orden_prod, name='crud_orden_prod'),
+    path('ingresar_orden_prod/',views.ingresar_orden_prod, name='ingresar_orden_prod'),
+    path('editar_orden_prod/<int:lote_prod_id>/',views.editar_orden_prod, name='editar_orden_prod'),
+
     ]
 

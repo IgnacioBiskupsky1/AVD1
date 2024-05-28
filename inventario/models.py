@@ -1,6 +1,7 @@
 #"""
 from django.db import models
 from django.contrib.auth.models import User
+import datetime
 
 
 # Create your models here.
@@ -67,6 +68,37 @@ class StockInsumo(models.Model):
     stock_in_id = models.AutoField(primary_key=True)
     insumo = models.ForeignKey(Insumo, on_delete=models.CASCADE)
     stock_in_cant_unit = models.DecimalField(max_digits=10, decimal_places=2)
+
+class LoteProd(models.Model):
+    lote_prod_id = models.AutoField(primary_key=True)
+    lote_prod_fecha = models.DateField(default=datetime.date.today)
+    prod_copec = models.ForeignKey(ProdCopec, on_delete=models.CASCADE)
+    volumen_odp = models.DecimalField(max_digits=10, decimal_places=2)
+    volumen_prod = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    tk_agua = models.CharField(max_length=5, blank=True, null=True)
+    tk_prod = models.CharField(max_length=5, blank=True, null=True)
+    lote_mp = models.CharField(max_length=5, blank=True, null=True)
+    fecha_ven_mp = models.DateField(default=datetime.date.today)
+    lote_colorante = models.CharField(max_length=5, blank=True, null=True)
+    fecha_ven_colorante = models.DateField(default=datetime.date.today)
+    lote_aromatizante = models.CharField(max_length=5, blank=True, null=True)
+    fecha_ven_aromatizante = models.DateField(default=datetime.date.today)
+    num_pedido_asr = models.CharField(max_length=5, blank=True, null=True)
+    lote_asr = models.CharField(max_length=5, blank=True, null=True)
+    fecha_ven_asr = models.DateField(default=datetime.date.today)
+    freezing_point = models.DecimalField(max_digits=4, decimal_places=2, default=0.00)
+    ph = models.DecimalField(max_digits=4, decimal_places=2, default=0.00)
+    glicol = models.DecimalField(max_digits=4, decimal_places=2, default=0.00)
+    color = models.CharField(max_length=10, blank=True, null=True)
+    olor = models.CharField(max_length=10, blank=True, null=True)
+    apariencia = models.CharField(max_length=5, blank=True, null=True)
+    sellos_tapas = models.CharField(max_length=5, blank=True, null=True)
+    valvulas = models.CharField(max_length=5, blank=True, null=True)
+    estado_aceptado = models.CharField(max_length=10, blank=True, null=True)
+    estado_produccion = models.CharField(max_length=10, blank=True, default='PENDIENTE')    
+    patente = models.CharField(max_length=5, blank=True, null=True)
+    cliente = models.CharField(max_length=50, blank=True, null=True) 
+
 
 
 """

@@ -1,8 +1,8 @@
 #"""
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
-from .forms import UserForm, InfoAditivoForm, ProductoForm, CompProductoForm, StockAditivoForm, InsumoForm, StockProductoForm, StockInsumoForm, ProdCopecForm
-from .models import InfoAditivo, Producto, CompProducto, StockAditivo, Insumo, StockProducto, StockInsumo, ProdCopec
+from .forms import UserForm, InfoAditivoForm, ProductoForm, CompProductoForm, StockAditivoForm, InsumoForm, StockProductoForm, StockInsumoForm, ProdCopecForm, OdpForm
+from .models import InfoAditivo, Producto, CompProducto, StockAditivo, Insumo, StockProducto, StockInsumo, ProdCopec, LoteProd
 from django.http import JsonResponse
 from django.contrib import messages
 from django.http import HttpResponse
@@ -400,5 +400,34 @@ def agregar_stock(prod_copec_id, valor_total):
     except StockInsumo.DoesNotExist:
         raise ValueError(f"Stock de insumo no existe")
 
+###################################################################################################################
+
 def cruds(request):
     return render(request, 'cruds.html',{})
+
+########################################## METODOS ORDEN PRODUCCION ########################################################
+
+def crud_orden_prod(request):
+    odps = LoteProd.objects.all()
+    return render(request, 'ventanas_prod/orden_prod/crud_orden_prod.html', {'odps': odps}) 
+
+def ingresar_orden_prod(request):
+    if request.method == 'POST':
+        form = OdpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/crud_orden_prod') 
+    else:
+        form = OdpForm()
+    return render(request, 'ventanas_prod/orden_prod/ingresar_orden_prod.html', {'form': form})
+
+def editar_orden_prod(request, lote_prod_id):
+    odp = get_object_or_404(LoteProd, lote_prod_id=lote_prod_id)
+    if request.method == 'POST':
+        form = OdpForm(request.POST, instance=odp)
+        if form.is_valid():
+            form.save()
+            return redirect('/crud_orden_prod')  
+    else:
+        form = StockInsumoForm(instance=odp)
+    return render(request, 'ventanas_prod/orden_prod/editar_orden_prod.html', {'form': form})

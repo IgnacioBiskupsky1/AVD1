@@ -1,0 +1,49 @@
+{%  extends "base.html" %}
+
+{% block titulo%} Insumos {% endblock %}
+
+{% block contenido %} 
+<br>
+<div class="card">
+    <div class="card-header">
+        <a name="" id="" class="btn btn-success" href="/ingresar_orden_prod" role="button">Ingresar Orden de Producción</a>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Planificación de Producción</h5>
+
+        <div class="table-responsive">
+            <table class="table table-primary">
+                <thead>
+                    <tr>
+                        <th scope="col">Lote</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Producto</th>
+                        <th scope="col">LITROS</th>
+                        <th scope="col">Envases</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for odp in odps %} 
+                    <tr>
+                                               
+                        <td scope="row">{{ odp.lote_prod_id }}</td>
+                        <td>{{ odp.lote_prod_fecha }}</td>
+                        <td>{{ odp.prod_copec.producto }}</td>
+                        <td>{{ odp.volumen_odp }}</td>
+                        <td>{{ odp.prod_copec.insumo }}</td>
+                        <td>{{ odp.estado_produccion }}</td>
+                        <td>
+                            <a name="" id="" class="btn btn-info" href="/editar_orden_prod/{{ odp.lote_prod_id }}" role="button">Editar</a>                             
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %} 

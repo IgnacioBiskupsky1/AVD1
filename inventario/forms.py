@@ -1,6 +1,6 @@
 #"""
 from django import forms
-from .models import InfoAditivo, Producto, CompProducto, StockAditivo, Insumo, ProdCopec, StockInsumo, StockProducto
+from .models import InfoAditivo, Producto, CompProducto, StockAditivo, Insumo, ProdCopec, StockInsumo, StockProducto, LoteProd
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
@@ -88,6 +88,65 @@ class StockInsumoForm(forms.ModelForm):
             'stock_in_cant_unit': 'Cantidad del Insumo'  
         }
 
-#"""
+class OdpForm(forms.ModelForm):
+    class Meta:
+        model = LoteProd
+        fields = ['lote_prod_fecha', 'prod_copec','volumen_odp']
+        labels = {
+            'lote_prod_fecha': 'Fecha de Planificacion', 
+            'prod_copec': 'Producto asociado al Lote',
+            'volumen_odp': 'Volumen [LT]'              
+        }
 
-    
+class CalidadForm(forms.ModelForm):
+    class Meta:
+        model = LoteProd
+        fields = ['volumen_prod', 
+                  'tk_agua',
+                  'tk_prod', 
+                  'lote_mp', 
+                  'fecha_ven_mp',
+                  'lote_colorante', 
+                  'fecha_ven_colorante', 
+                  'lote_aromatizante', 
+                  'fecha_ven_aromatizante', 
+                  'num_pedido_asr', 
+                  'lote_asr', 
+                  'fecha_ven_asr',
+                  'freezing_point',
+                  'ph',
+                  'glicol',
+                  'color',
+                  'olor',
+                  'apariencia',
+                  'sellos_tapas',
+                  'valvulas',
+                  'estado_aceptado',
+                  'estado_produccion',
+                ]
+        labels = {
+            'volumen_prod': 'Volumen [LT]', 
+            'tk_agua':'TK de Agua',
+            'tk_prod':'TK de Producto', 
+            'lote_mp':'Lote de Aditivo', 
+            'fecha_ven_mp':'Fecha de vencimiento de Aditivo',      
+            'lote_colorante':'Lote de Colorante',       
+            'fecha_ven_colorante':'Fecha de vencimiento de Colorante', 
+            'lote_aromatizante':'Lote de Aromatizante', 
+            'fecha_ven_aromatizante':'Fecha de vencimiento de Aromatizante', 
+            'num_pedido_asr':'Numero de Pedido de ASR', 
+            'lote_asr':'Lote de ASR', 
+            'fecha_ven_asr':'Fecha de vencimiento de ASR',
+            'freezing_point':'Freezing Point del Producto',
+            'ph':'pH del Producto',
+            'glicol':'Porcentaje de Glicol del Producto',
+            'color':'Color del Producto',
+            'olor':'Olor del Producto',
+            'apariencia':'Apariencia del Producto',
+            'sellos_tapas':'Sellos/tapas',
+            'valvulas':'Valvulas',
+            'estado_aceptado':'Estado (ACEPTADO O RECHAZADO)',
+            'estado_produccion':'Estado (PENDIENTE O COMPLETO)',                    
+        }
+   
+#"""
