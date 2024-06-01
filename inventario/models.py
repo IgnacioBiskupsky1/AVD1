@@ -1,4 +1,5 @@
 #"""
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 import datetime
@@ -7,7 +8,17 @@ import datetime
 # Create your models here.
 
 #Modelo de Insumos
-
+"""
+class CustomUser(AbstractUser):
+    USER_TYPES = (
+        ('admin', 'Admin'),
+        ('calidad', 'Calidad'),
+        ('manager', 'Manager'),
+        ('user', 'User'),
+    )
+    user_type = models.CharField(max_length=10, choices=USER_TYPES)
+"""
+    
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 

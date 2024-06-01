@@ -1,10 +1,11 @@
 
-from django.urls import path
+from django.urls import path, include
 from . import views
+from django.contrib import admin
 from django.contrib.auth import views as auth_views
 #from .views import producir_producto_view
 
-app_name = 'usercrud'
+app_name = 'inventario'
 
 
 urlpatterns = [
@@ -17,6 +18,9 @@ urlpatterns = [
     path('<int:pk>/update', views.user_update, name='user_update'),
     path('login_user/', views.login_user, name='login_user'),
     path('user_list/', views.user_list,  name='user_list'),
+
+    path('admin/', admin.site.urls),
+
     path('welcome_user/',views.welcome_user, name='welcome_user'),
     path('cruds/',views.cruds, name='cruds'),
 

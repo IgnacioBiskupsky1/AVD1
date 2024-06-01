@@ -463,9 +463,7 @@ def crud_certificado(request):
 def gen_certificado(request, lote_prod_id):
     # Obtener el objeto correspondiente al lote_prod_id
     odp = get_object_or_404(LoteProd, lote_prod_id=lote_prod_id)
-    return render(request, 'ventanas_prod/despacho/gen_certificado.html', {'odp': odp}) 
-
-"""    
+    
     # Renderizar el HTML a una cadena
     html = render_to_string('ventanas_prod/despacho/gen_certificado.html', {'odp': odp})
 
@@ -482,4 +480,6 @@ def gen_certificado(request, lote_prod_id):
     
     return response
 
-"""
+#"""
+
+#return render(request, 'ventanas_prod/despacho/gen_certificado.html', {'odp': odp}) 
