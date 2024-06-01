@@ -1,16 +1,12 @@
 #"""
-import os
-from django.conf import settings
-from django.template.loader import get_template
+
 from django.template.loader import render_to_string
 from xhtml2pdf import pisa
-from django.contrib.staticfiles import finders
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
 from .forms import UserForm, InfoAditivoForm, ProductoForm, CompProductoForm, StockAditivoForm, InsumoForm, StockProductoForm, StockInsumoForm, ProdCopecForm, OdpForm, CalidadForm
 from .models import InfoAditivo, Producto, CompProducto, StockAditivo, Insumo, StockProducto, StockInsumo, ProdCopec, LoteProd
-from django.http import JsonResponse, HttpResponse
-from django.contrib import messages
+from django.http import HttpResponse
 from .utils import link_callback
 from decimal import Decimal
 from django.db import transaction
