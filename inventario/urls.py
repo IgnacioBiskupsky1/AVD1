@@ -69,5 +69,10 @@ urlpatterns = [
     path('ingresar_orden_prod/',views.ingresar_orden_prod, name='ingresar_orden_prod'),
     path('editar_orden_prod/<int:lote_prod_id>/',views.editar_orden_prod, name='editar_orden_prod'),
 
+    path('crud_calidad/', views.crud_calidad, name='crud_calidad'),
+    path('editar_calidad/<int:lote_prod_id>/',views.editar_calidad, name='editar_calidad'),
+
+    path('crud_certificado/', views.crud_certificado, name='crud_certificado'),
+    path('gen_certificado/<int:lote_prod_id>/', views.gen_certificado, name='gen_certificado'),
     ]
 

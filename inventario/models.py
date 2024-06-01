@@ -71,7 +71,7 @@ class StockInsumo(models.Model):
 
 class LoteProd(models.Model):
     lote_prod_id = models.AutoField(primary_key=True)
-    lote_prod_fecha = models.DateField(default=datetime.date.today)
+    lote_prod_fecha = models.DateField(default=datetime.date.today, auto_now_add=False)
     prod_copec = models.ForeignKey(ProdCopec, on_delete=models.CASCADE)
     volumen_odp = models.DecimalField(max_digits=10, decimal_places=2)
     volumen_prod = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)

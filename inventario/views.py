@@ -1,15 +1,20 @@
 #"""
+import os
+from django.conf import settings
+from django.template.loader import get_template
+from django.template.loader import render_to_string
+from xhtml2pdf import pisa
+from django.contrib.staticfiles import finders
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
-from .forms import UserForm, InfoAditivoForm, ProductoForm, CompProductoForm, StockAditivoForm, InsumoForm, StockProductoForm, StockInsumoForm, ProdCopecForm, OdpForm
+from .forms import UserForm, InfoAditivoForm, ProductoForm, CompProductoForm, StockAditivoForm, InsumoForm, StockProductoForm, StockInsumoForm, ProdCopecForm, OdpForm, CalidadForm
 from .models import InfoAditivo, Producto, CompProducto, StockAditivo, Insumo, StockProducto, StockInsumo, ProdCopec, LoteProd
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
-from django.http import HttpResponse
+from .utils import link_callback
 from decimal import Decimal
 from django.db import transaction
 import math
-
 
 # Create your views here.
 ##################################### METODOS USUARIO #####################################
@@ -405,7 +410,7 @@ def agregar_stock(prod_copec_id, valor_total):
 def cruds(request):
     return render(request, 'cruds.html',{})
 
-########################################## METODOS ORDEN PRODUCCION ########################################################
+########################################## METODOS ORDEN PRODUCCION ################################################
 
 def crud_orden_prod(request):
     odps = LoteProd.objects.all()
@@ -429,5 +434,52 @@ def editar_orden_prod(request, lote_prod_id):
             form.save()
             return redirect('/crud_orden_prod')  
     else:
-        form = StockInsumoForm(instance=odp)
+        form = OdpForm(instance=odp)
     return render(request, 'ventanas_prod/orden_prod/editar_orden_prod.html', {'form': form})
+
+########################################## METODOS CALIDAD ################################################
+
+def crud_calidad(request):
+    odps = LoteProd.objects.all()
+    return render(request, 'ventanas_prod/analisis_calidad/crud_calidad.html', {'odps': odps}) 
+
+def editar_calidad(request, lote_prod_id):
+    odp = get_object_or_404(LoteProd, lote_prod_id=lote_prod_id)
+    if request.method == 'POST':
+        form = CalidadForm(request.POST, instance=odp)
+        if form.is_valid():
+            form.save()
+            return redirect('/crud_orden_prod')
+    else:
+        form = CalidadForm(instance=odp)
+    return render(request, 'ventanas_prod/analisis_calidad/editar_calidad.html', {'form': form})
+
+########################################## METODOS CERTIFICADO ################################################
+
+def crud_certificado(request):
+    odps = LoteProd.objects.all()
+    return render(request, 'ventanas_prod/despacho/crud_certificado.html', {'odps': odps})
+
+def gen_certificado(request, lote_prod_id):
+    # Obtener el objeto correspondiente al lote_prod_id
+    odp = get_object_or_404(LoteProd, lote_prod_id=lote_prod_id)
+    return render(request, 'ventanas_prod/despacho/gen_certificado.html', {'odp': odp}) 
+
+"""    
+    # Renderizar el HTML a una cadena
+    html = render_to_string('ventanas_prod/despacho/gen_certificado.html', {'odp': odp})
+
+    # Crear una respuesta HTTP con el tipo de contenido PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="certificado_{lote_prod_id}.pdf"'
+
+    # Convertir el HTML a PDF usando xhtml2pdf
+    pisa_status = pisa.CreatePDF(html, dest=response, link_callback=link_callback)
+
+    # Verificar si hubo algún error
+    if pisa_status.err:
+        return HttpResponse('Ocurrió un error al generar el PDF', status=500)
+    
+    return response
+
+"""
