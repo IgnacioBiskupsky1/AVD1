@@ -18,10 +18,11 @@ class CustomUser(AbstractUser):
     )
     user_type = models.CharField(max_length=10, choices=USER_TYPES)
 """
-    
+"""    
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-
+"""
+    
 class Insumo(models.Model):
     insumo_id = models.AutoField(primary_key=True)
     insumo_nom = models.CharField(max_length=60, blank=True, null=True)    

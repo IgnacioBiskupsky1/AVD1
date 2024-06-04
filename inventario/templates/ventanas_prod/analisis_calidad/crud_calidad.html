@@ -25,7 +25,7 @@
                 <tbody>
                     {% for odp in odps %} 
                     <tr>
-                                               
+                        {% if odp.estado_produccion == "PENDIENTE" %}                                               
                         <td scope="row">{{ odp.lote_prod_id }}</td>
                         <td>{{ odp.lote_prod_fecha }}</td>
                         <td>{{ odp.prod_copec.producto }}</td>
@@ -34,9 +34,12 @@
                         <td>{{ odp.estado_produccion }}</td>
 
                         <td>
-                            <a name="" id="" class="btn btn-info" href="/editar_calidad/{{ odp.lote_prod_id }}" role="button">Editar</a>                             
+                            <a name="" id="" class="btn btn-info" href="/editar_calidad/{{ odp.lote_prod_id }}" role="button">Editar</a> | 
+                            <a name="" id="" class="btn btn-info" href="/confirmar_prod_calidad/{{odp.lote_prod_id}}" role="button">Confirmar Produccion</a> 
+
                         </td>
                     </tr>
+                    {% endif %}
                     {% endfor %}
                 </tbody>
             </table>

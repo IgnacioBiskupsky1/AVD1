@@ -39,8 +39,8 @@ urlpatterns = [
    
     path('crud_producto/', views.crud_producto, name='crud_producto'),
     path('ingresar_producto/',views.ingresar_producto, name='ingresar_producto'),
-    path('editar_producto/<int:productos_id>/',views.editar_producto, name='editar_producto'),
-    path('eliminar_producto/<int:productos_id>/',views.eliminar_producto, name='eliminar_producto'),
+    path('editar_producto/<int:producto_id>/',views.editar_producto, name='editar_producto'),
+    path('eliminar_producto/<int:producto_id>/',views.eliminar_producto, name='eliminar_producto'),
     
     
     path('crud_comp/', views.crud_comp, name='crud_comp'),
@@ -54,7 +54,7 @@ urlpatterns = [
     path('eliminar_producto_copec/<int:prod_copec_id>/',views.eliminar_producto_copec, name='eliminar_producto_copec'),
 
     #path('producir/', views.producir_producto_view, name='producir_producto'),
-    path('orden_de_prod/', views.orden_de_prod, name='orden_de_prod'),
+    #path('orden_de_prod/', views.orden_de_prod, name='orden_de_prod'),
 
     path('crud_stock_prod/', views.crud_stock_prod, name='crud_stock_prod'),
     path('ingresar_stock_prod/',views.ingresar_stock_prod, name='ingresar_stock_prod'),
@@ -75,6 +75,8 @@ urlpatterns = [
 
     path('crud_calidad/', views.crud_calidad, name='crud_calidad'),
     path('editar_calidad/<int:lote_prod_id>/',views.editar_calidad, name='editar_calidad'),
+    path('confirmar_prod_calidad/<int:lote_prod_id>/',views.confirmar_prod_calidad, name='confirmar_prod_calidad'),
+    
 
     path('crud_certificado/', views.crud_certificado, name='crud_certificado'),
     path('gen_certificado/<int:lote_prod_id>/', views.gen_certificado, name='gen_certificado'),

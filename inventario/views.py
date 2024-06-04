@@ -1,5 +1,4 @@
 #"""
-
 from django.template.loader import render_to_string
 from xhtml2pdf import pisa
 from django.shortcuts import render, get_object_or_404, redirect
@@ -7,7 +6,7 @@ from django.contrib.auth.models import User
 from .forms import UserForm, InfoAditivoForm, ProductoForm, CompProductoForm, StockAditivoForm, InsumoForm, StockProductoForm, StockInsumoForm, ProdCopecForm, OdpForm, CalidadForm
 from .models import InfoAditivo, Producto, CompProducto, StockAditivo, Insumo, StockProducto, StockInsumo, ProdCopec, LoteProd
 from django.http import HttpResponse
-from .utils import link_callback
+from .utils import link_callback, agregar_stock
 from decimal import Decimal
 from django.db import transaction
 import math
@@ -89,7 +88,7 @@ def editar_mp(request, adtv_id):
         form = InfoAditivoForm(request.POST, instance=aditivo)
         if form.is_valid():
             form.save()
-            return redirect('/crud_mp')  # Cambia 'listar_aditivos' por el nombre de tu vista de listado de aditivos
+            return redirect('/crud_mp')
     else:
         form = InfoAditivoForm(instance=aditivo)
     return render(request, 'inventary/materia_prima/editar_mp.html', {'form': form})
@@ -98,7 +97,7 @@ def eliminar_mp(request, adtv_id):
     aditivo = get_object_or_404(InfoAditivo, adtv_id=adtv_id)
     if request.method == 'POST':
         aditivo.delete()
-        return redirect('/crud_mp')  # Redirigir a la página de listado de productos
+        return redirect('/crud_mp')  
     return render(request, 'inventary/materia_prima/eliminar_mp.html', {'aditivo': aditivo})
 
 def listar_mp(request):
@@ -120,7 +119,7 @@ def ingresar_in(request):
         form = InsumoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/crud_insu')  # Cambia 'home' por el nombre de tu URL de inicio
+            return redirect('/crud_insu')
     else:
         form = InsumoForm()
     return render(request, 'inventary/insumos/ingresar_insumo.html', {'form': form})
@@ -129,7 +128,7 @@ def eliminar_in(request, insumo_id):
     insumo = get_object_or_404(Insumo, insumo_id=insumo_id)
     if request.method == 'POST':
         insumo.delete()
-        return redirect('/crud_insu')  # Redirigir a la página de listado de productos
+        return redirect('/crud_insu')  
     return render(request, 'inventary/insumos/eliminar_insumo.html', {'insumo': insumo})
 
 def editar_in(request, insumo_id):
@@ -154,13 +153,13 @@ def ingresar_producto(request):
         form = ProductoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/crud_comp')  # Cambia 'home' por el nombre de tu URL de inicio
+            return redirect('/crud_comp')  
     else:
         form = ProductoForm()
     return render(request,'inventary/productos/ingresar_producto.html', {'form': form})
 
-def editar_producto(request, productos_id):
-    producto = get_object_or_404(Producto, productos_id=productos_id)
+def editar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, producto_id=producto_id)
     if request.method == 'POST':
         form = ProductoForm(request.POST, instance=producto)
         if form.is_valid():
@@ -170,11 +169,11 @@ def editar_producto(request, productos_id):
         form = ProductoForm(instance=producto)
     return render(request, 'inventary/productos/editar_producto.html', {'form': form})
 
-def eliminar_producto(request, productos_id):
-    producto = get_object_or_404(Producto, productos_id=productos_id)
+def eliminar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, producto_id=producto_id)
     if request.method == 'POST':
         producto.delete()
-        return redirect('/crud_producto')  # Redirigir a la página de listado de productos
+        return redirect('/crud_producto')
     return render(request, 'inventary/productos/eliminar_producto.html', {'producto': producto})
 
 ##################################### METODOS PRODUCTO COPEC #####################################
@@ -224,7 +223,11 @@ def crud_comp(request):
     
     productos = CompProducto.objects.values_list('producto__producto_nom', flat=True).distinct()
     
-    return render(request, 'inventary/comp_producto/crud_comp.html', {'comps': comps, 'productos': productos, 'producto_seleccionado': producto_seleccionado},) 
+    return render(request, 
+                  'inventary/comp_producto/crud_comp.html',
+                  {'comps': comps, 'productos': productos,
+                   'producto_seleccionado': producto_seleccionado
+                   }) 
 
 
 def ingresar_comp(request):
@@ -232,7 +235,7 @@ def ingresar_comp(request):
         form = CompProductoForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/crud_comp')  # Cambia 'home' por el nombre de tu URL de inicio
+            return redirect('/crud_comp')  
     else:
         form = CompProductoForm()
     return render(request, 'inventary/comp_producto/ingresar_comp.html', {'form': form})
@@ -252,7 +255,7 @@ def eliminar_comp(request, comp_producto_id):
     composicion = get_object_or_404(CompProducto, comp_producto_id=comp_producto_id)
     if request.method == 'POST':
         composicion.delete()
-        return redirect('/crud_comp')  # Redirigir a la página de listado de productos
+        return redirect('/crud_comp')
     return render(request, 'inventary/comp_producto/eliminar_comp.html', {'composicion': composicion})
 
 
@@ -337,8 +340,102 @@ def editar_stock_insumo(request, stock_in_id):
         form = StockInsumoForm(instance=stockinsu)
     return render(request, 'inventary/stock_insumo/editar_stock_insumo.html', {'form': form})
 
-##################################### TRANSACCION COPEC DIRECTA CON EL PRODUCTO#####################################
+###################################################################################################################
 
+def cruds(request):
+    return render(request, 'cruds.html',{})
+
+########################################## METODOS ORDEN PRODUCCION ################################################
+
+def crud_orden_prod(request):
+    odps = LoteProd.objects.all()
+    return render(request, 'ventanas_prod/orden_prod/crud_orden_prod.html', {'odps': odps}) 
+
+def ingresar_orden_prod(request):
+    if request.method == 'POST':
+        form = OdpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/crud_orden_prod') 
+    else:
+        form = OdpForm()
+    return render(request, 'ventanas_prod/orden_prod/ingresar_orden_prod.html', {'form': form})
+
+def editar_orden_prod(request, lote_prod_id):
+    odp = get_object_or_404(LoteProd, lote_prod_id=lote_prod_id)
+    if request.method == 'POST':
+        form = OdpForm(request.POST, instance=odp)
+        if form.is_valid():            
+            form.save()
+            return redirect('/crud_orden_prod')  
+    else:
+        form = OdpForm(instance=odp)
+    return render(request, 'ventanas_prod/orden_prod/editar_orden_prod.html', {'form': form})
+
+########################################## METODOS CALIDAD ################################################
+
+def crud_calidad(request):
+    odps = LoteProd.objects.all()
+    return render(request, 'ventanas_prod/analisis_calidad/crud_calidad.html', {'odps': odps}) 
+
+def editar_calidad(request, lote_prod_id):
+    odp = get_object_or_404(LoteProd, lote_prod_id=lote_prod_id)
+    if request.method == 'POST':
+        form = CalidadForm(request.POST, instance=odp)
+        if form.is_valid():
+            form.save()
+            return redirect('/crud_calidad')
+    else:
+        form = CalidadForm(instance=odp)
+    return render(request, 'ventanas_prod/analisis_calidad/editar_calidad.html', {'form': form})
+
+def confirmar_prod_calidad(request, lote_prod_id):
+    odp = get_object_or_404(LoteProd, lote_prod_id=lote_prod_id)
+
+    # Aquí obtén los valores necesarios, por ejemplo:
+    prod_copec_id = odp.prod_copec.prod_copec_id
+    volumen_odp = odp.volumen_odp    
+    # Llama a la función agregar_stock con los parámetros necesarios
+    try:
+        agregar_stock(prod_copec_id, volumen_odp)
+        odp.estado_produccion = 'ENVASADO'
+        odp.save()
+        return redirect('/crud_calidad')
+    except ValueError as e:
+        raise ValueError(e)
+
+
+########################################## METODOS CERTIFICADO ################################################
+
+def crud_certificado(request):
+    odps = LoteProd.objects.all()
+    return render(request, 'ventanas_prod/despacho/crud_certificado.html', {'odps': odps})
+
+def gen_certificado(request, lote_prod_id):
+    # Obtener el objeto correspondiente al lote_prod_id
+    odp = get_object_or_404(LoteProd, lote_prod_id=lote_prod_id)
+    
+    # Renderizar el HTML a una cadena
+    html = render_to_string('ventanas_prod/despacho/gen_certificado.html', {'odp': odp})
+
+    # Crear una respuesta HTTP con el tipo de contenido PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="certificado_{lote_prod_id}.pdf"'
+
+    # Convertir el HTML a PDF usando xhtml2pdf
+    pisa_status = pisa.CreatePDF(html, dest=response, link_callback=link_callback)
+
+    # Verificar si hubo algún error
+    if pisa_status.err:
+        return HttpResponse('Ocurrió un error al generar el PDF', status=500)
+    
+    return response
+
+#"""
+
+#return render(request, 'ventanas_prod/despacho/gen_certificado.html', {'odp': odp}) 
+
+"""
 @transaction.atomic
 def orden_de_prod(request):
 
@@ -400,82 +497,4 @@ def agregar_stock(prod_copec_id, valor_total):
         raise ValueError(f"Stock de aditivo no existe")
     except StockInsumo.DoesNotExist:
         raise ValueError(f"Stock de insumo no existe")
-
-###################################################################################################################
-
-def cruds(request):
-    return render(request, 'cruds.html',{})
-
-########################################## METODOS ORDEN PRODUCCION ################################################
-
-def crud_orden_prod(request):
-    odps = LoteProd.objects.all()
-    return render(request, 'ventanas_prod/orden_prod/crud_orden_prod.html', {'odps': odps}) 
-
-def ingresar_orden_prod(request):
-    if request.method == 'POST':
-        form = OdpForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('/crud_orden_prod') 
-    else:
-        form = OdpForm()
-    return render(request, 'ventanas_prod/orden_prod/ingresar_orden_prod.html', {'form': form})
-
-def editar_orden_prod(request, lote_prod_id):
-    odp = get_object_or_404(LoteProd, lote_prod_id=lote_prod_id)
-    if request.method == 'POST':
-        form = OdpForm(request.POST, instance=odp)
-        if form.is_valid():
-            form.save()
-            return redirect('/crud_orden_prod')  
-    else:
-        form = OdpForm(instance=odp)
-    return render(request, 'ventanas_prod/orden_prod/editar_orden_prod.html', {'form': form})
-
-########################################## METODOS CALIDAD ################################################
-
-def crud_calidad(request):
-    odps = LoteProd.objects.all()
-    return render(request, 'ventanas_prod/analisis_calidad/crud_calidad.html', {'odps': odps}) 
-
-def editar_calidad(request, lote_prod_id):
-    odp = get_object_or_404(LoteProd, lote_prod_id=lote_prod_id)
-    if request.method == 'POST':
-        form = CalidadForm(request.POST, instance=odp)
-        if form.is_valid():
-            form.save()
-            return redirect('/crud_orden_prod')
-    else:
-        form = CalidadForm(instance=odp)
-    return render(request, 'ventanas_prod/analisis_calidad/editar_calidad.html', {'form': form})
-
-########################################## METODOS CERTIFICADO ################################################
-
-def crud_certificado(request):
-    odps = LoteProd.objects.all()
-    return render(request, 'ventanas_prod/despacho/crud_certificado.html', {'odps': odps})
-
-def gen_certificado(request, lote_prod_id):
-    # Obtener el objeto correspondiente al lote_prod_id
-    odp = get_object_or_404(LoteProd, lote_prod_id=lote_prod_id)
-    
-    # Renderizar el HTML a una cadena
-    html = render_to_string('ventanas_prod/despacho/gen_certificado.html', {'odp': odp})
-
-    # Crear una respuesta HTTP con el tipo de contenido PDF
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="certificado_{lote_prod_id}.pdf"'
-
-    # Convertir el HTML a PDF usando xhtml2pdf
-    pisa_status = pisa.CreatePDF(html, dest=response, link_callback=link_callback)
-
-    # Verificar si hubo algún error
-    if pisa_status.err:
-        return HttpResponse('Ocurrió un error al generar el PDF', status=500)
-    
-    return response
-
-#"""
-
-#return render(request, 'ventanas_prod/despacho/gen_certificado.html', {'odp': odp}) 
+"""
