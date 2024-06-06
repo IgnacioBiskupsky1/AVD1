@@ -1,7 +1,6 @@
-
-from django.urls import path, include
-from . import views
 from django.contrib import admin
+from django.urls import path
+from . import views
 from django.contrib.auth import views as auth_views
 #from .views import producir_producto_view
 
@@ -9,19 +8,22 @@ app_name = 'inventario'
 
 
 urlpatterns = [
-    path('', views.login_user,  name='login_user'),
+    
     path('<int:pk>/', views.user_detail, name='user_detail'),
     path('new/', views.user_create, name='user_create'),
     path('<int:pk>/edit/', views.edituser, name='edituser'),
     path('<int:pk>/delete/', views.user_delete, name='user_delete'),
-    path('home/', views.home, name='home'),
     path('<int:pk>/update', views.user_update, name='user_update'),
     path('login_user/', views.login_user, name='login_user'),
     path('user_list/', views.user_list,  name='user_list'),
 
     path('admin/', admin.site.urls),
+    path('', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('logout', auth_views.LogoutView.as_view(), name='logout'),
 
-    path('welcome_user/',views.welcome_user, name='welcome_user'),
+    #path('welcome_user/',views.welcome_user, name='welcome_user'),
+    #path('', views.login_user, name='login_user'),
+    path('home/', views.home, name='home'),
     path('cruds/',views.cruds, name='cruds'),
 
     path('ingresar_mp/',views.ingresar_mp, name='ingresar_mp'),
@@ -41,8 +43,7 @@ urlpatterns = [
     path('ingresar_producto/',views.ingresar_producto, name='ingresar_producto'),
     path('editar_producto/<int:producto_id>/',views.editar_producto, name='editar_producto'),
     path('eliminar_producto/<int:producto_id>/',views.eliminar_producto, name='eliminar_producto'),
-    
-    
+        
     path('crud_comp/', views.crud_comp, name='crud_comp'),
     path('ingresar_comp/',views.ingresar_comp, name='ingresar_comp'),
     path('editar_comp/<int:comp_producto_id>/',views.editar_comp, name='editar_comp'),
@@ -59,8 +60,7 @@ urlpatterns = [
     path('crud_stock_prod/', views.crud_stock_prod, name='crud_stock_prod'),
     path('ingresar_stock_prod/',views.ingresar_stock_prod, name='ingresar_stock_prod'),
     path('editar_stock_prod/<int:stock_producto_id>/',views.editar_stock_prod, name='editar_stock_prod'),
-    
-    
+        
     path('crud_stock_mp/', views.crud_stock_mp, name='crud_stock_mp'),
     path('ingresar_stock_mp/',views.ingresar_stock_mp, name='ingresar_stock_mp'),
     path('editar_stock_mp/<int:stock_ad_id>/',views.editar_stock_mp, name='editar_stock_mp'),
@@ -78,7 +78,7 @@ urlpatterns = [
     path('confirmar_prod_calidad/<int:lote_prod_id>/',views.confirmar_prod_calidad, name='confirmar_prod_calidad'),
     
 
-    path('crud_certificado/', views.crud_certificado, name='crud_certificado'),
     path('gen_certificado/<int:lote_prod_id>/', views.gen_certificado, name='gen_certificado'),
+
     ]
 

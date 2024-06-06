@@ -22,6 +22,7 @@
                         <th scope="col">Envases</th>
                         <th scope="col">Estado</th>
                         <th scope="col">Acciones</th>
+                        <th scope="col">Certificado</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,6 +37,11 @@
                         <td>{{ odp.estado_produccion }}</td>
                         <td>
                             <a name="" id="" class="btn btn-info" href="/editar_orden_prod/{{ odp.lote_prod_id }}" role="button">Editar</a>                             
+                        </td>
+                        <td>
+                            {% if odp.estado_produccion == "ENVASADO" %}
+                                <a name="" id="" class="btn btn-info" href="/gen_certificado/{{ odp.lote_prod_id }}" role="button">Certificado</a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

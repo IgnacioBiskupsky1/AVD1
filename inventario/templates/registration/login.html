@@ -7,15 +7,44 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
 </head>
 <body>
-    <form method="post">
-        <!-- {% csrf_token %} -->
+    <div class="col">
+        <div class="row">
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <h2>Iniciar sesión</h2>
+            <div>
+                <label for="id_username">Usuario:</label>
+                <input type="text" name="username" id="id_username" required>
+            </div>
+            <div>
+                <label for="id_password">Contraseña:</label>
+                <input type="password" name="password" id="id_password" required>
+            </div>
+            <button type="submit">Iniciar sesión</button>
+        </form>
+        </div>    
+        {% if form.errors %}
+        <div class="row">
+            <p>El nombre de usuario o la contraseña son incorrectos.</p>
+        </div>        
+        {% endif %}
+    </div>
+    
+    <!--
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
         <h2>Iniciar sesión</h2>
+        
         <input type="text" name="usuario" placeholder="Usuario" required>
         <input type="password" name="contraseña" placeholder="Contraseña" required>
+        <button type="submit">Iniciar sesión</button>
+        
         <div class="buttons">
             <a href="home" class="btn">Iniciar Sesión</a>
-            <a href="reguser" class="btn">Registrarme</a>
         </div>
+        
     </form>
+    -->
+    
 </body>
 </html>

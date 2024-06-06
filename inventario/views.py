@@ -3,16 +3,42 @@ from django.template.loader import render_to_string
 from xhtml2pdf import pisa
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from .forms import UserForm, InfoAditivoForm, ProductoForm, CompProductoForm, StockAditivoForm, InsumoForm, StockProductoForm, StockInsumoForm, ProdCopecForm, OdpForm, CalidadForm
 from .models import InfoAditivo, Producto, CompProducto, StockAditivo, Insumo, StockProducto, StockInsumo, ProdCopec, LoteProd
 from django.http import HttpResponse
+from django.middleware.csrf import get_token
 from .utils import link_callback, agregar_stock
-from decimal import Decimal
-from django.db import transaction
-import math
 
 # Create your views here.
 ##################################### METODOS USUARIO #####################################
+@login_required
+def home(request):
+    context = {
+        'username':request.user.username,
+        'csrf_token':get_token(request)
+    }
+    return render(request, 'usercrud/welcome_user.html', context)
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            return render(request, 'login.html', {'error': 'Nombre de usuario o contraseña incorrectos'})
+    else:
+        return render(request, 'login.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+    
+
 def user_list(request):
     users = User.objects.all ()
     return render(request, 'usercrud/user_list.html', {'users': users})
@@ -61,11 +87,11 @@ def edituser(request):
 
 def welcome_user(request):
     return render(request, 'usercrud/welcome_user.html') 
-
+"""
 def home(request):
     context={}
     return render(request, 'user/home.html', context)
-
+"""
 ##################################### METODOS MATERIA PRIMA #####################################
 
 def crud_mp(request):
@@ -407,16 +433,12 @@ def confirmar_prod_calidad(request, lote_prod_id):
 
 ########################################## METODOS CERTIFICADO ################################################
 
-def crud_certificado(request):
-    odps = LoteProd.objects.all()
-    return render(request, 'ventanas_prod/despacho/crud_certificado.html', {'odps': odps})
-
 def gen_certificado(request, lote_prod_id):
     # Obtener el objeto correspondiente al lote_prod_id
     odp = get_object_or_404(LoteProd, lote_prod_id=lote_prod_id)
     
     # Renderizar el HTML a una cadena
-    html = render_to_string('ventanas_prod/despacho/gen_certificado.html', {'odp': odp})
+    html = render_to_string('ventanas_prod/orden_prod/gen_certificado.html', {'odp': odp})
 
     # Crear una respuesta HTTP con el tipo de contenido PDF
     response = HttpResponse(content_type='application/pdf')
@@ -428,7 +450,7 @@ def gen_certificado(request, lote_prod_id):
     # Verificar si hubo algún error
     if pisa_status.err:
         return HttpResponse('Ocurrió un error al generar el PDF', status=500)
-    
+        
     return response
 
 #"""

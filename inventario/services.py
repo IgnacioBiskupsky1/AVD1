@@ -1,4 +1,3 @@
-
 """
 from decimal import Decimal
 from django.db import transaction
@@ -17,7 +16,7 @@ def producir_producto(prod_id, cantidad_producir, envasado):
         # Verificar si hay suficientes aditivos en stock
         for componente in componentes:
             stock_aditivo = StockAditivo.objects.get(nomAditivo=componente.info_aditivo)
-            cantidad_necesaria = cantidad_producir * componente.vv #* componente.pp  
+            cantidad_necesaria = cantidad_producir * componente.vv * componente.pp  
 
             if stock_aditivo.stock_ad_cant_lt < cantidad_necesaria:
                 raise ValueError(f"No hay suficiente stock del aditivo {componente.info_aditivo.adtv_nom}.")
