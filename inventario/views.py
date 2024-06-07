@@ -13,13 +13,55 @@ from .utils import link_callback, agregar_stock
 
 # Create your views here.
 ##################################### METODOS USUARIO #####################################
-@login_required
-def home(request):
-    context = {
-        'username':request.user.username,
-        'csrf_token':get_token(request)
-    }
-    return render(request, 'usercrud/welcome_user.html', context)
+
+def crud_usuario(request):
+    users = User.objects.all ()
+    return render(request, 'usercrud/crud_usuario.html', {'users': users})
+
+def crear_usuario(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/crud_usuario')
+    else:
+        form = UserForm()
+    return render(request, 'usercrud/crear_usuario.html', {'form': form})
+    
+def editar_usuario(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    if request.method == 'POST':
+        form = UserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('/crud_usuario')
+    else:
+        form = UserForm(instance=user)
+    return render(request, 'usercrud/editar_usuario.html', {'form': form})    
+    
+def eliminar_usuario(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    if request.method == 'POST':
+        user.delete()
+        return redirect('/crud_usuario')
+    return render(request, 'usercrud/eliminar_usuario.html', {'user': user})
+
+"""
+def user_detail(request, pk):
+    user = get_object_or_404(Usuario, pk=pk)
+    return render(request, 'usercrud/user_detail.html', {'user': user})
+
+
+def login_user(request):
+    context={}
+    return render(request, 'usercrud/login_user.html', context)
+
+def edituser(request):
+    context={}
+    return render(request, 'usercrud/edituser.html', context) 
+"""
+
+##################################### METODOS LOGIN LOGOUT #####################################
 
 def login_view(request):
     if request.method == 'POST':
@@ -37,61 +79,21 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
-    
 
-def user_list(request):
-    users = User.objects.all ()
-    return render(request, 'usercrud/user_list.html', {'users': users})
+#########################################################################################   
 
-def user_detail(request, pk):
-    user = get_object_or_404(User, pk=pk)
-    return render(request, 'usercrud/user_detail.html', {'user': user})
-
-def user_create(request):
-    if request.method == 'POST':
-        form = UserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('usercrud:user_list')
-    else:
-        form = UserForm()
-    return render(request, 'usercrud/user_create.html', {'form': form})
-    
-def user_update(request, pk):
-    user = get_object_or_404(User, pk=pk)
-    if request.method == 'POST':
-        form = UserForm(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-            return redirect('usercrud:user_list')
-    else:
-        form = UserForm(instance=user)
-    return render(request, 'usercrud/user_form.html', {'form': form})    
-    
-def user_delete(request, pk):
-    user = get_object_or_404(User, pk=pk)
-    if request.method == 'POST':
-        user.delete()
-        return redirect('usercrud:user_list')
-    return render(request, 'usercrud/user_delete.html', {'user': user})
-
-def login_user(request):
-    context={}
-    return render(request, 'usercrud/login_user.html', context)
-
-def edituser(request):
-    context={}
-    return render(request, 'usercrud/edituser.html', context) 
 
 ##################################### PLANTILLA BASE #####################################
 
-def welcome_user(request):
-    return render(request, 'usercrud/welcome_user.html') 
-"""
-def home(request):
-    context={}
-    return render(request, 'user/home.html', context)
-"""
+@login_required
+def home(request):    
+    context = {
+        'username': request.user.username,
+        'grupo': request.user.groups.first(),
+        'csrf_token': get_token(request)
+    }
+    return render(request, 'usercrud/welcome_user.html', context)
+
 ##################################### METODOS MATERIA PRIMA #####################################
 
 def crud_mp(request):
@@ -430,8 +432,25 @@ def confirmar_prod_calidad(request, lote_prod_id):
     except ValueError as e:
         raise ValueError(e)
 
+########################################## METODOS INVENTARIO BODEGA ################################################
 
-########################################## METODOS CERTIFICADO ################################################
+def crud_inv_bodega(request):
+    odps = LoteProd.objects.all()
+    return render(request, 'ventanas_prod/inventario_bodega/crud_inv_bodega.html', {'odps': odps}) 
+
+########################################## METODOS GUIAS DESPACHO ###################################################
+
+def crud_guias_despacho(request):
+    odps = LoteProd.objects.all()
+    return render(request, 'ventanas_prod/guias_despacho/crud_guias_despacho.html', {'odps': odps}) 
+
+########################################## METODOS DESPACHO #########################################################
+
+def crud_despacho(request):
+    odps = LoteProd.objects.all()
+    return render(request, 'ventanas_prod/despacho_bodega/crud_despacho.html', {'odps': odps}) 
+
+########################################## METODOS CERTIFICADO ######################################################
 
 def gen_certificado(request, lote_prod_id):
     # Obtener el objeto correspondiente al lote_prod_id

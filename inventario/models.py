@@ -1,28 +1,84 @@
 #"""
 from django.conf import settings
-from django.db import models
-from django.contrib.auth.models import User
+from django.db import models 
+from django.contrib.auth.models import User #AbstractBaseUser, BaseUserManager
 import datetime
 
 
 # Create your models here.
+"""
+class UsuarioManager(BaseUserManager):
+	def create_user(self, email, username, nombres, apellidos,tipo_usuario, password=None):
+		if not email:
+			raise ValueError('El usuario debe tener un Correo Electrónico')
 
-#Modelo de Insumos
+		usuario = self.model(
+			username = username, 
+			email = self.normalize_email(email), 
+			nombres = nombres, 
+			apellidos = apellidos,
+            tipo_usuario = tipo_usuario
+		)
+        	
+		usuario.set_password(password)
+		usuario.save()
+		return usuario
+
+	def create_superuser(self, email, username, nombres, apellidos,tipo_usuario, password):
+		usuario = self.create_user(
+			email,
+			username = username, 
+			nombres = nombres, 
+			apellidos = apellidos,
+			password = password,
+            tipo_usuario = tipo_usuario
+		)
+		
+		usuario.usuario_administrador = True
+		usuario.save()
+		return usuario
+	
+
+class Usuario(AbstractBaseUser):
+	username = models.CharField('Nombre de usuario', unique = True, max_length=100)
+	email = models.EmailField('Correo Electronico', unique = True, max_length=254)
+	nombres = models.CharField('Nombres', blank = True, max_length=200, null = True)
+	apellidos = models.CharField('Apellidos', blank = True, max_length=200, null = True)
+	#imagen = models.ImageField('Imagen de Perfil', upload_to='perfil/', height_field=None, width_field=None, max_length = 200, blank = True, null = True)
+	usuario_activo = models.BooleanField(default=True)
+	usuario_administrador = models.BooleanField(default=False)
+	tipo_usuario = models.CharField('Tipo de Usuario', unique = True, max_length = 20, null = False, default = 'NA')
+	objects = UsuarioManager()
+	
+	USERNAME_FIELD = 'username'
+	REQUIRED_FIELDS = ['email', 'nombres', 'apellidos', 'tipo_usuario']
+
+	def __str__(self):
+		return f'Usuario {self.username},{self.apellidos}'
+
+	def has_perm(self,perm,obj = None):
+		return True
+
+	def has_module_perms(self, app_label):
+		return True
+
+	@property
+	def is_staff(self):
+		return self.usuario_administrador
+
 """
-class CustomUser(AbstractUser):
-    USER_TYPES = (
-        ('admin', 'Admin'),
-        ('calidad', 'Calidad'),
-        ('manager', 'Manager'),
-        ('user', 'User'),
-    )
-    user_type = models.CharField(max_length=10, choices=USER_TYPES)
-"""
-"""    
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-"""
-    
+
+class RestVistas(models.Model):
+    class Meta:
+        permissions = [
+            ("access_cruds", "can access cruds"),
+            ("access_crud_inv_bodega", "can access crud_inv_bodega"),
+            ("access_crud_orden_prod", "can access crud_orden_prod"),
+            ("access_crud_calidad", "can access crud_calidad"),
+            ("access_crud_guias_despacho", "can access crud_guias_despacho"),
+            ("access_crud_despacho", "can access crud_despacho"),
+        ]
+
 class Insumo(models.Model):
     insumo_id = models.AutoField(primary_key=True)
     insumo_nom = models.CharField(max_length=60, blank=True, null=True)    

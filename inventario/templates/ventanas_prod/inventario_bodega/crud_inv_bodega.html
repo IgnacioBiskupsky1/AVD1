@@ -1,0 +1,21 @@
+{%  extends "base.html" %}
+
+{% block titulo%} Producir Producto {% endblock %}
+
+{% block contenido %}
+<div class="row -myDiv">
+    <h1>Recepcion de Materias Primas e Insumos</h1><br>
+    <div class="col">        
+        <h2>Materias Primas<h2>
+        <a href="/crud_stock_mp">
+            <h4>Gestión de Stock Materias Primas</h4>
+        </a>
+    </div> 
+    <div class="col">
+        <h2>Insumos<h2>
+        <a href="/crud_stock_insumo">
+            <h4>Gestión de Stock de Insumos</h4>
+        </a>
+    </div>
+</div>
+{% endblock %} 
