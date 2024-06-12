@@ -64,10 +64,6 @@ urlpatterns = [
 
     path('cruds/',views.cruds, name='cruds'),
 
-    path('crud_inv_bodega/', views.crud_inv_bodega, name='crud_inv_bodega'),
-    path('crud_guias_despacho/', views.crud_guias_despacho, name='crud_guias_despacho'),
-    path('crud_despacho/', views.crud_despacho, name='crud_despacho'),
-
     path('crud_stock_prod/', views.crud_stock_prod, name='crud_stock_prod'),
     path('ingresar_stock_prod/',views.ingresar_stock_prod, name='ingresar_stock_prod'),
     path('editar_stock_prod/<int:stock_producto_id>/',views.editar_stock_prod, name='editar_stock_prod'),
@@ -83,13 +79,21 @@ urlpatterns = [
     path('crud_orden_prod/', views.crud_orden_prod, name='crud_orden_prod'),
     path('ingresar_orden_prod/',views.ingresar_orden_prod, name='ingresar_orden_prod'),
     path('editar_orden_prod/<int:lote_prod_id>/',views.editar_orden_prod, name='editar_orden_prod'),
+    path('eliminar_orden_prod/<int:lote_prod_id>/',views.eliminar_orden_prod, name='eliminar_orden_prod'),
+    path('gen_certificado/<int:lote_prod_id>/', views.gen_certificado, name='gen_certificado'),
 
     path('crud_calidad/', views.crud_calidad, name='crud_calidad'),
     path('editar_calidad/<int:lote_prod_id>/',views.editar_calidad, name='editar_calidad'),
     path('confirmar_prod_calidad/<int:lote_prod_id>/',views.confirmar_prod_calidad, name='confirmar_prod_calidad'),
     
+    path('crud_inv_bodega/', views.crud_inv_bodega, name='crud_inv_bodega'),
+    
+    path('crud_despacho/', views.crud_despacho, name='crud_despacho'),
+    path('ingresar_despacho/', views.ingresar_despacho, name='ingresar_despacho'),
+    path('crud_lote_desp/', views.crud_lote_desp, name='crud_lote_desp'),
 
-    path('gen_certificado/<int:lote_prod_id>/', views.gen_certificado, name='gen_certificado'),
-
+    path('crud_guia_despacho/', views.crud_guia_despacho, name='crud_guia_despacho'),
+    path('editar_guia_despacho/<int:despacho_id>/',views.editar_guia_despacho, name='editar_guia_despacho'),
+    
     ]
 

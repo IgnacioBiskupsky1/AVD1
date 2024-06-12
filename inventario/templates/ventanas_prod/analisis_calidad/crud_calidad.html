@@ -19,7 +19,7 @@
                         <th scope="col">LITROS</th>
                         <th scope="col">Envases</th>
                         <th scope="col">Estado</th>
-
+                        <th scope="col">Accion</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,7 +32,6 @@
                         <td>{{ odp.volumen_odp }}</td>
                         <td>{{ odp.prod_copec.insumo }}</td>
                         <td>{{ odp.estado_produccion }}</td>
-
                         <td>
                             <a name="" id="" class="btn btn-info" href="/editar_calidad/{{ odp.lote_prod_id }}" role="button">Editar</a> | 
                             <a name="" id="" class="btn btn-info" href="/confirmar_prod_calidad/{{odp.lote_prod_id}}" role="button">Confirmar Produccion</a> 

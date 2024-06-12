@@ -67,17 +67,8 @@ class Usuario(AbstractBaseUser):
 		return self.usuario_administrador
 
 """
-
-class RestVistas(models.Model):
-    class Meta:
-        permissions = [
-            ("access_cruds", "can access cruds"),
-            ("access_crud_inv_bodega", "can access crud_inv_bodega"),
-            ("access_crud_orden_prod", "can access crud_orden_prod"),
-            ("access_crud_calidad", "can access crud_calidad"),
-            ("access_crud_guias_despacho", "can access crud_guias_despacho"),
-            ("access_crud_despacho", "can access crud_despacho"),
-        ]
+"""
+"""    
 
 class Insumo(models.Model):
     insumo_id = models.AutoField(primary_key=True)
@@ -91,10 +82,10 @@ class Insumo(models.Model):
 
 class InfoAditivo(models.Model):
     adtv_id = models.AutoField(primary_key=True)
-    adtv_nom = models.CharField(max_length=60, blank=True, null=True)
-    adtv_dens = models.CharField(max_length=10, blank=True, null=True)
+    adtv_nom = models.CharField(max_length=60, blank=True, null=True, unique=True)
+    adtv_dens = models.DecimalField(max_digits=6, decimal_places=5, default=0.0)
     def __str__(self):
-        return self.adtv_nom
+        return self.adtv_nom    
 
 class Producto(models.Model):
     producto_id = models.AutoField(primary_key=True)
@@ -125,6 +116,10 @@ class StockAditivo(models.Model):
     stock_ad_id = models.AutoField(primary_key=True)
     nomAditivo = models.ForeignKey(InfoAditivo, on_delete=models.CASCADE)
     stock_ad_cant_lt = models.DecimalField(max_digits=10, decimal_places=2)
+    class Meta:
+        permissions = [
+            ("can_access_crud_stock_mp", "Can access crud_stock_mp view")
+        ]
 
 class StockProducto(models.Model):
     stock_producto_id = models.AutoField(primary_key=True)
@@ -136,6 +131,10 @@ class StockInsumo(models.Model):
     stock_in_id = models.AutoField(primary_key=True)
     insumo = models.ForeignKey(Insumo, on_delete=models.CASCADE)
     stock_in_cant_unit = models.DecimalField(max_digits=10, decimal_places=2)
+    class Meta:
+        permissions = [
+            ("can_access_crud_stock_insumo", "Can access crud_stock_insumo view")
+        ]
 
 class LoteProd(models.Model):
     lote_prod_id = models.AutoField(primary_key=True)
@@ -143,30 +142,51 @@ class LoteProd(models.Model):
     prod_copec = models.ForeignKey(ProdCopec, on_delete=models.CASCADE)
     volumen_odp = models.DecimalField(max_digits=10, decimal_places=2)
     volumen_prod = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    tk_agua = models.CharField(max_length=5, blank=True, null=True)
-    tk_prod = models.CharField(max_length=5, blank=True, null=True)
-    lote_mp = models.CharField(max_length=5, blank=True, null=True)
+    cant_prod = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
+    tk_agua = models.CharField(max_length=5, default = 'N/A', null=False)
+    tk_prod = models.CharField(max_length=5, default = 'N/A', null=False)
+    lote_mp = models.CharField(max_length=5, default = 'N/A', null=False)
     fecha_ven_mp = models.DateField(default=datetime.date.today)
-    lote_colorante = models.CharField(max_length=5, blank=True, null=True)
+    lote_colorante = models.CharField(max_length=5, default = 'N/A', null=False)
     fecha_ven_colorante = models.DateField(default=datetime.date.today)
-    lote_aromatizante = models.CharField(max_length=5, blank=True, null=True)
+    lote_aromatizante = models.CharField(max_length=5, default = 'N/A', null=False)
     fecha_ven_aromatizante = models.DateField(default=datetime.date.today)
-    num_pedido_asr = models.CharField(max_length=5, blank=True, null=True)
-    lote_asr = models.CharField(max_length=5, blank=True, null=True)
+    num_pedido_asr = models.CharField(max_length=5, default = 'N/A', null=False)
+    lote_asr = models.CharField(max_length=5, default = 'N/A', null=False)
     fecha_ven_asr = models.DateField(default=datetime.date.today)
     freezing_point = models.DecimalField(max_digits=4, decimal_places=2, default=0.00)
     ph = models.DecimalField(max_digits=4, decimal_places=2, default=0.00)
     glicol = models.DecimalField(max_digits=4, decimal_places=2, default=0.00)
-    color = models.CharField(max_length=10, blank=True, null=True)
-    olor = models.CharField(max_length=10, blank=True, null=True)
-    apariencia = models.CharField(max_length=5, blank=True, null=True)
-    sellos_tapas = models.CharField(max_length=5, blank=True, null=True)
-    valvulas = models.CharField(max_length=5, blank=True, null=True)
-    estado_aceptado = models.CharField(max_length=10, blank=True, null=True)
-    estado_produccion = models.CharField(max_length=10, blank=True, default='PENDIENTE')    
-    patente = models.CharField(max_length=5, blank=True, null=True)
-    cliente = models.CharField(max_length=50, blank=True, null=True) 
+    color = models.CharField(max_length=10, default = 'N/A', null=False)
+    olor = models.CharField(max_length=10, default = 'N/A', null=False)
+    apariencia = models.CharField(max_length=5, default = 'N/A', null=False)
+    sellos_tapas = models.CharField(max_length=5, default = 'N/A', null=False)
+    valvulas = models.CharField(max_length=5, default = 'N/A', null=False)
+    estado_aceptado = models.CharField(max_length=10, default = '-', null=False)
+    estado_produccion = models.CharField(max_length=10, default='PENDIENTE', null=False)    
+    patente = models.CharField(max_length=5, default = 'N/A', null=False)
+    cliente = models.CharField(max_length=50, default = 'COPEC', null=False)
 
+    class Meta:
+        permissions = [
+            ("can_access_crud_orden_prod", "Can access crud_orden_prod view"),
+            ("can_access_crud_calidad", "Can access crud_calidad view"),
+            ("can_access_crud_lote_desp", "Can access crud_lote_desp view")
+        ]
+
+class Despacho(models.Model):
+    despacho_id = models.AutoField(primary_key=True)
+    lote = models.ForeignKey(LoteProd, on_delete=models.CASCADE)
+    fecha_despacho = models.DateField(default=datetime.date.today, auto_now_add=False)
+    tipo_despacho = models.CharField(max_length=50, default = 'Despacho', null=False)     
+    cant_despacho = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
+    guia_despacho = models.IntegerField(default=0, null=False)
+
+    class Meta:
+        permissions = [
+            ("can_access_crud_guias_despacho", "Can access crud_guias_despacho view"),
+            ("can_access_crud_despacho", "Can access crud_despacho view")
+        ]
 
 
 """

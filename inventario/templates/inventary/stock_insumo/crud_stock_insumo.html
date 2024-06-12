@@ -1,6 +1,6 @@
 {%  extends "base.html" %}
 
-{% block titulo%} Insumo {% endblock %}
+{% block titulo%} Stock de Insumos {% endblock %}
 
 {% block contenido %} 
 <br>
@@ -29,7 +29,7 @@
                         <td>{{ stockinsu.insumo }}</td>
                         <td>{{ stockinsu.stock_in_cant_unit }}</td>
                         <td>
-                            <a name="" id="" class="btn btn-info" href="/editar_stock_insumo/{{ stockinsu.stock_in_id }}" role="button">Editar</a> |                             
+                            <a name="" id="" class="btn btn-info" href="/editar_stock_insumo/{{ stockinsu.stock_in_id }}" role="button">Editar</a>
                         </td>
                     </tr>
                     {% endfor %}

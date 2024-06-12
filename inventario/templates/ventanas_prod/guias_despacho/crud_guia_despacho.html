@@ -1,15 +1,13 @@
 {%  extends "base.html" %}
 
-{% block titulo%} Despacho de Bodega {% endblock %}
+{% block titulo%} Guias de Despacho {% endblock %}
 
 {% block contenido %} 
 <br>
 <div class="card">
-    <div class="card-header">        
-        <a name="" id="" class="btn btn-success" href="/crud_lote_desp" role="button">Lotes Disponibles</a>
-    </div>
+    <div class="card-header"></div>
     <div class="card-body">
-        <h5 class="card-title">Despacho de Bodega</h5>
+        <h5 class="card-title">Guias de Despacho</h5>
         <div class="table-responsive">
             <table class="table table-primary">
                 <thead>
@@ -23,6 +21,7 @@
                         <th scope="col">Codigo Material</th>
                         <th scope="col">Estado</th>
                         <th scope="col">Guia de Despacho</th>
+                        <th scope="col">Accion</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,7 +35,10 @@
                         <td>{{ desp.cant_despacho }}</td>
                         <td>{{ desp.lote.prod_copec.prod_copec_cod }}</td>
                         <td>{{ desp.lote.estado_produccion }}</td>
-                        <td>{{ desp.guia_despacho }}</td>                        
+                        <td>{{ desp.guia_despacho }}</td>
+                        <td>
+                            <a name="" id="" class="btn btn-info" href="/editar_guia_despacho/{{ desp.despacho_id }}" role="button">Editar</a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

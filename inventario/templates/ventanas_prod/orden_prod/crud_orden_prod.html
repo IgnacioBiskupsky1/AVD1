@@ -1,6 +1,6 @@
 {%  extends "base.html" %}
 
-{% block titulo%} Insumos {% endblock %}
+{% block titulo%} Orden de Produccion {% endblock %}
 
 {% block contenido %} 
 <br>
@@ -20,6 +20,7 @@
                         <th scope="col">Producto</th>
                         <th scope="col">LITROS</th>
                         <th scope="col">Envases</th>
+                        <th scope="col">Cliente</th>
                         <th scope="col">Estado</th>
                         <th scope="col">Acciones</th>
                         <th scope="col">Certificado</th>
@@ -34,12 +35,14 @@
                         <td>{{ odp.prod_copec.producto }}</td>
                         <td>{{ odp.volumen_odp }}</td>
                         <td>{{ odp.prod_copec.insumo }}</td>
+                        <td>{{ odp.cliente }}</td>
                         <td>{{ odp.estado_produccion }}</td>
                         <td>
-                            <a name="" id="" class="btn btn-info" href="/editar_orden_prod/{{ odp.lote_prod_id }}" role="button">Editar</a>                             
+                            <a name="" id="" class="btn btn-info" href="/editar_orden_prod/{{ odp.lote_prod_id }}" role="button">Editar</a> |
+                            <a name="" id="" class="btn btn-danger" href="/eliminar_orden_prod/{{ odp.lote_prod_id }}" role="button">Eliminar</a>
                         </td>
                         <td>
-                            {% if odp.estado_produccion == "ENVASADO" %}
+                            {% if odp.estado_produccion == "DESPACHADO" %}
                                 <a name="" id="" class="btn btn-info" href="/gen_certificado/{{ odp.lote_prod_id }}" role="button">Certificado</a>
                             {% endif %}
                         </td>
@@ -47,8 +50,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
-        
+        </div>        
     </div>
 </div>
 

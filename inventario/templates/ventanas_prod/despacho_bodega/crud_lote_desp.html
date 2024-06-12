@@ -1,0 +1,58 @@
+{%  extends "base.html" %}
+
+{% block titulo%} Lotes Disponibles para Despacho {% endblock %}
+
+{% block contenido %} 
+<br>
+<div class="card">
+    <div class="card-header">
+        <a name="" id="" class="btn btn-success" href="/ingresar_despacho" role="button">Generar Despacho</a>
+        <a name="" id="" class="btn btn-success" href="/crud_despacho" role="button">Lista de Despachos</a>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Lotes Disponibles para Despacho</h5>
+        <div class="table-responsive">
+            <table class="table table-primary">
+                <thead>
+                    <tr>
+                        <th scope="col">Lote</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Producto</th>
+                        <th scope="col">Envases</th>
+                        <th scope="col">Cantidad [Un.]</th>                        
+                        <th scope="col">Estado</th>
+                        <th scope="col">Cantidad a Despachar</th>
+                        <th scope="col">Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for odp in odps %} 
+                    <tr>
+                        <form method="post" action="/ingresar_despacho/">
+                            {% csrf_token %}
+                            {% if odp.estado_produccion == "DISPONIBLE" %}
+                            <td scope="row">{{ odp.lote_prod_id }}</td>
+                            <td>{{ odp.lote_prod_fecha }}</td>
+                            <td>{{ odp.prod_copec.producto }}</td>
+                            <td>{{ odp.prod_copec.insumo }}</td>
+                            <td>{{ odp.cant_prod }}</td>                        
+                            <td>{{ odp.estado_produccion }}</td>
+                            <td>
+                                <input type="text" id="cantidad_despachar" name="cantidad_despachar" class="form-control"/>
+                                <input type="hidden" name="lote_id" value="{{ odp.lote_prod_id }}"/>
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-info">Generar Despacho</button>
+                            </td>
+                        </form>
+                    </tr>
+                    {% endif %} 
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %} 

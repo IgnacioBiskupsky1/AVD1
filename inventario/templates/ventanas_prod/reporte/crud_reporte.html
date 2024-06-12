@@ -1,0 +1,46 @@
+{%  extends "base.html" %}
+
+{% block titulo%} Reporte Diario {% endblock %}
+
+{% block contenido %} 
+<br>
+<div class="card">
+    <div class="card-header"></div>
+    <div class="card-body">
+        <h5 class="card-title">Reporte Diario</h5>
+
+        <div class="table-responsive">
+            <table class="table table-primary">
+                <thead>
+                    <tr>
+                        <th scope="col">Fecha</th> 
+                        <th scope="col">Estado</th>                       
+                        <th scope="col">Codigo Material</th>
+                        <th scope="col">Cantidad</th>
+                        <th scope="col">Tipo Envasado</th>
+                        <th scope="col">Nombre Producto</th>
+                        <th scope="col">Lote</th>
+                        <th scope="col">Guia de Despacho</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for desp in desps %} 
+                    <tr>
+                        {% if desp.estado_produccion == "PENDIENTE" %}                                               
+                        <td scope="row">{{ desp.lote_prod_id }}</td>
+                        <td>{{ desp.lote_prod_fecha }}</td>
+                        <td>{{ desp.prod_copec.producto }}</td>
+                        <td>{{ desp.volumen_odp }}</td>
+                        <td>{{ desp.prod_copec.insumo }}</td>
+                        <td>{{ desp.estado_produccion }}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %} 

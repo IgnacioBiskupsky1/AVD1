@@ -4,12 +4,15 @@ from xhtml2pdf import pisa
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from .forms import UserForm, InfoAditivoForm, ProductoForm, CompProductoForm, StockAditivoForm, InsumoForm, StockProductoForm, StockInsumoForm, ProdCopecForm, OdpForm, CalidadForm
-from .models import InfoAditivo, Producto, CompProducto, StockAditivo, Insumo, StockProducto, StockInsumo, ProdCopec, LoteProd
+from django.contrib.auth.decorators import login_required, permission_required
+from .forms import UserForm, InfoAditivoForm, ProductoForm, CompProductoForm, StockAditivoForm, InsumoForm, StockProductoForm, StockInsumoForm, ProdCopecForm, OdpForm, CalidadForm, GuiaDespachoForm
+from .models import InfoAditivo, Producto, CompProducto, StockAditivo, Insumo, StockProducto, StockInsumo, ProdCopec, LoteProd, Despacho
 from django.http import HttpResponse
 from django.middleware.csrf import get_token
-from .utils import link_callback, agregar_stock
+from .utils import link_callback, agregar_stock, generar_despacho
+from django.http import HttpResponseForbidden
+from decimal import Decimal
+
 
 # Create your views here.
 ##################################### METODOS USUARIO #####################################
@@ -46,20 +49,6 @@ def eliminar_usuario(request, pk):
         return redirect('/crud_usuario')
     return render(request, 'usercrud/eliminar_usuario.html', {'user': user})
 
-"""
-def user_detail(request, pk):
-    user = get_object_or_404(Usuario, pk=pk)
-    return render(request, 'usercrud/user_detail.html', {'user': user})
-
-
-def login_user(request):
-    context={}
-    return render(request, 'usercrud/login_user.html', context)
-
-def edituser(request):
-    context={}
-    return render(request, 'usercrud/edituser.html', context) 
-"""
 
 ##################################### METODOS LOGIN LOGOUT #####################################
 
@@ -80,17 +69,13 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
-#########################################################################################   
-
-
 ##################################### PLANTILLA BASE #####################################
 
 @login_required
 def home(request):    
     context = {
         'username': request.user.username,
-        'grupo': request.user.groups.first(),
-        'csrf_token': get_token(request)
+        'grupo': request.user.groups.first()
     }
     return render(request, 'usercrud/welcome_user.html', context)
 
@@ -288,7 +273,7 @@ def eliminar_comp(request, comp_producto_id):
 
 
 ##################################### METODOS STOCK MP #####################################
-
+#@permission_required('inventario.can_access_crud_stock_mp', raise_exception=True)
 def crud_stock_mp(request):
     stockmps = StockAditivo.objects.all()
     return render(request, 'inventary/stock_mp/crud_stock_mp.html', {'stockmps': stockmps}) 
@@ -315,7 +300,6 @@ def editar_stock_mp(request, stock_ad_id):
     return render(request, 'inventary/stock_mp/editar_stock_mp.html', {'form': form})
 
 ##################################### METODOS STOCK PRODUCTOS #####################################
-
 def crud_stock_prod(request):
     stockprods = StockProducto.objects.all()
     return render(request, 'inventary/stock_producto/crud_stock_prod.html', {'stockprods': stockprods}) 
@@ -342,7 +326,7 @@ def editar_stock_prod(request, stock_producto_id):
     return render(request, 'inventary/stock_producto/editar_stock_prod.html', {'form': form})
 
 ##################################### METODOS STOCK INSUMO #####################################
-
+#@permission_required('inventario.can_access_crud_stock_insumo', raise_exception=True)
 def crud_stock_insumo(request):
     stockinsus = StockInsumo.objects.all()
     return render(request, 'inventary/stock_insumo/crud_stock_insumo.html', {'stockinsus': stockinsus}) 
@@ -369,15 +353,16 @@ def editar_stock_insumo(request, stock_in_id):
     return render(request, 'inventary/stock_insumo/editar_stock_insumo.html', {'form': form})
 
 ###################################################################################################################
-
+@permission_required('inventario.can_access_crud_orden_prod', raise_exception=True)
 def cruds(request):
-    return render(request, 'cruds.html',{})
+    return render(request, 'cruds.html')
 
 ########################################## METODOS ORDEN PRODUCCION ################################################
-
+@permission_required('inventario.can_access_crud_orden_prod', raise_exception=True)
 def crud_orden_prod(request):
+    
     odps = LoteProd.objects.all()
-    return render(request, 'ventanas_prod/orden_prod/crud_orden_prod.html', {'odps': odps}) 
+    return render(request,'ventanas_prod/orden_prod/crud_orden_prod.html',{'odps': odps}) 
 
 def ingresar_orden_prod(request):
     if request.method == 'POST':
@@ -400,11 +385,18 @@ def editar_orden_prod(request, lote_prod_id):
         form = OdpForm(instance=odp)
     return render(request, 'ventanas_prod/orden_prod/editar_orden_prod.html', {'form': form})
 
+def eliminar_orden_prod(request, lote_prod_id):
+    odp = get_object_or_404(LoteProd, lote_prod_id=lote_prod_id)
+    if request.method == 'POST':
+        odp.delete()
+        return redirect('/crud_orden_prod')
+    return render(request, 'ventanas_prod/orden_prod/eliminar_orden_prod.html', {'odp': odp})
 ########################################## METODOS CALIDAD ################################################
-
+@permission_required('inventario.can_access_crud_calidad', raise_exception=True)
 def crud_calidad(request):
     odps = LoteProd.objects.all()
-    return render(request, 'ventanas_prod/analisis_calidad/crud_calidad.html', {'odps': odps}) 
+
+    return render(request,'ventanas_prod/analisis_calidad/crud_calidad.html',{'odps': odps}) 
 
 def editar_calidad(request, lote_prod_id):
     odp = get_object_or_404(LoteProd, lote_prod_id=lote_prod_id)
@@ -425,30 +417,62 @@ def confirmar_prod_calidad(request, lote_prod_id):
     volumen_odp = odp.volumen_odp    
     # Llama a la función agregar_stock con los parámetros necesarios
     try:
-        agregar_stock(prod_copec_id, volumen_odp)
-        odp.estado_produccion = 'ENVASADO'
-        odp.save()
+        agregar_stock(prod_copec_id, volumen_odp, lote_prod_id)
         return redirect('/crud_calidad')
     except ValueError as e:
         raise ValueError(e)
 
 ########################################## METODOS INVENTARIO BODEGA ################################################
-
+@permission_required('inventario.can_access_crud_despacho', raise_exception=True)
 def crud_inv_bodega(request):
-    odps = LoteProd.objects.all()
-    return render(request, 'ventanas_prod/inventario_bodega/crud_inv_bodega.html', {'odps': odps}) 
-
-########################################## METODOS GUIAS DESPACHO ###################################################
-
-def crud_guias_despacho(request):
-    odps = LoteProd.objects.all()
-    return render(request, 'ventanas_prod/guias_despacho/crud_guias_despacho.html', {'odps': odps}) 
+    desps = Despacho.objects.all()
+    return render(request, 'ventanas_prod/inventario_bodega/crud_inv_bodega.html',{'desps': desps})
 
 ########################################## METODOS DESPACHO #########################################################
-
+@permission_required('inventario.can_access_crud_despacho', raise_exception=True)
 def crud_despacho(request):
+    desps = Despacho.objects.all()        
+    return render(request, 'ventanas_prod/despacho_bodega/crud_despacho.html', {'desps': desps}) 
+
+def crud_lote_desp(request):
     odps = LoteProd.objects.all()
-    return render(request, 'ventanas_prod/despacho_bodega/crud_despacho.html', {'odps': odps}) 
+    return render(request, 'ventanas_prod/despacho_bodega/crud_lote_desp.html', {'odps': odps})
+
+def ingresar_despacho(request):
+    if request.method == 'POST':
+        cantidad = request.POST.get('cantidad_despachar')
+        lote_id = request.POST.get('lote_id')
+        
+        if not cantidad or not lote_id:
+            return HttpResponse('Parámetros incompletos', status=400)    
+        
+        try:
+            cantidad = Decimal(cantidad)
+            lote_id = int(lote_id)
+            generar_despacho(lote_id, cantidad)
+            return redirect('/crud_despacho')
+        except ValueError as e:            
+            return HttpResponse(str(e), status=400)
+    
+    return HttpResponse('Método no permitido', status=405)
+
+
+########################################## METODOS GUIAS DESPACHO ###################################################
+@permission_required('inventario.can_access_crud_guias_despacho', raise_exception=True)
+def crud_guia_despacho(request):
+    desps = Despacho.objects.all()
+    return render(request, 'ventanas_prod/guias_despacho/crud_guia_despacho.html', {'desps': desps})
+
+def editar_guia_despacho(request, despacho_id):
+    desp = get_object_or_404(Despacho, despacho_id=despacho_id)
+    if request.method == 'POST':
+        form = GuiaDespachoForm(request.POST, instance=desp)
+        if form.is_valid():
+            form.save()
+            return redirect('/crud_guia_despacho')
+    else:
+        form = GuiaDespachoForm(instance=desp)
+    return render(request, 'ventanas_prod/guias_despacho/editar_guia_despacho.html', {'form': form})
 
 ########################################## METODOS CERTIFICADO ######################################################
 
@@ -472,70 +496,7 @@ def gen_certificado(request, lote_prod_id):
         
     return response
 
-#"""
-
-#return render(request, 'ventanas_prod/despacho/gen_certificado.html', {'odp': odp}) 
-
 """
-@transaction.atomic
-def orden_de_prod(request):
 
-    if request.method == 'POST':
-        prod_copec_id  = request.POST.get('prod_copec_id')
-        valor_total = request.POST.get('valor_total')
 
-        try:
-            valor_total = Decimal(valor_total)
-            agregar_stock(prod_copec_id,valor_total)
-            HttpResponse("Stock agregado exitosamente")
-            return redirect('/crud_stock_prod')
-        except ValueError as e:
-            return HttpResponse(f"Error: {e}")
-    else:
-        prod_copecs = ProdCopec.objects.all()
-
-    return render(request, 'ventanas_prod/orden_de_produccion.html', {
-        'prod_copecs': prod_copecs,
-    })
-
-@transaction.atomic
-def agregar_stock(prod_copec_id, valor_total):
-    try:
-        
-        prod_copec = ProdCopec.objects.get(prod_copec_id=prod_copec_id)
-        insumo = prod_copec.insumo
-        stock_producto, created = StockProducto.objects.get_or_create(
-            prod_copec=prod_copec,
-            defaults={'stock_prod_cant_vol': valor_total,
-                      'stock_prod_cant_uni':math.trunc(Decimal(valor_total) / insumo.insumo_vol)}
-        )
-        
-        if not created:                
-            stock_producto.stock_prod_cant_vol +=  Decimal(valor_total)
-            stock_producto.stock_prod_cant_uni +=  math.trunc(Decimal(valor_total) / insumo.insumo_vol)
-            stock_producto.save()
-
-        comp_productos = CompProducto.objects.filter(producto=prod_copec.producto)
-        for comp_producto in comp_productos:
-            aditivo = comp_producto.info_aditivo
-            cantidad_a_descontar = Decimal(valor_total) * comp_producto.vv
-            stock_aditivo = StockAditivo.objects.get(nomAditivo=aditivo)
-            if stock_aditivo.stock_ad_cant_lt < cantidad_a_descontar:
-                raise ValueError(f"No hay suficiente stock del aditivo {aditivo.adtv_nom}")
-            stock_aditivo.stock_ad_cant_lt -= cantidad_a_descontar
-            stock_aditivo.save()
-
-        cantidad_a_descontar_insumo = math.trunc(Decimal(valor_total) / insumo.insumo_vol)
-        stock_insumo = StockInsumo.objects.get(insumo=insumo)
-        if stock_insumo.stock_in_cant_unit < cantidad_a_descontar_insumo:
-            raise ValueError(f"No hay suficiente stock del insumo {insumo.insumo_nom}")
-        stock_insumo.stock_in_cant_unit -= cantidad_a_descontar_insumo
-        stock_insumo.save()
-        
-    except ProdCopec.DoesNotExist:
-        raise ValueError(f"Producto con id {prod_copec_id} no existe")
-    except StockAditivo.DoesNotExist:
-        raise ValueError(f"Stock de aditivo no existe")
-    except StockInsumo.DoesNotExist:
-        raise ValueError(f"Stock de insumo no existe")
 """

@@ -1,6 +1,6 @@
 #"""
 from django import forms
-from .models import InfoAditivo, Producto, CompProducto, StockAditivo, Insumo, ProdCopec, StockInsumo, StockProducto, LoteProd, User
+from .models import InfoAditivo, Producto, CompProducto, StockAditivo, Insumo, ProdCopec, StockInsumo, StockProducto, LoteProd, User, Despacho
 
 class UserForm(forms.ModelForm):
     class Meta:
@@ -89,18 +89,18 @@ class StockInsumoForm(forms.ModelForm):
 class OdpForm(forms.ModelForm):
     class Meta:
         model = LoteProd
-        fields = ['lote_prod_fecha', 'prod_copec','volumen_odp']
+        fields = ['lote_prod_fecha', 'prod_copec','volumen_odp', 'cliente']
         labels = {
             'lote_prod_fecha': 'Fecha de Planificacion', 
-            'prod_copec': 'Producto asociado al Lote',
-            'volumen_odp': 'Volumen [LT]'              
+            'prod_copec': 'Producto Copec',
+            'volumen_odp': 'Volumen [LT]',
+            'cliente': 'Cliente'
         }
 
 class CalidadForm(forms.ModelForm):
     class Meta:
         model = LoteProd
-        fields = ['volumen_prod', 
-                  'tk_agua',
+        fields = ['tk_agua',
                   'tk_prod', 
                   'lote_mp', 
                   'fecha_ven_mp',
@@ -118,12 +118,9 @@ class CalidadForm(forms.ModelForm):
                   'olor',
                   'apariencia',
                   'sellos_tapas',
-                  'valvulas',
-                  'estado_aceptado',
-                  'estado_produccion',
+                  'valvulas'
                 ]
-        labels = {
-            'volumen_prod': 'Volumen [LT]', 
+        labels = { 
             'tk_agua':'TK de Agua',
             'tk_prod':'TK de Producto', 
             'lote_mp':'Lote de Aditivo', 
@@ -142,9 +139,24 @@ class CalidadForm(forms.ModelForm):
             'olor':'Olor del Producto',
             'apariencia':'Apariencia del Producto',
             'sellos_tapas':'Sellos/tapas',
-            'valvulas':'Valvulas',
-            'estado_aceptado':'Estado (ACEPTADO O RECHAZADO)',
-            'estado_produccion':'Estado (PENDIENTE O COMPLETO)',                    
+            'valvulas':'Valvulas'                   
         }
-   
+
+class DespachoForm(forms.ModelForm):
+    class Meta:
+        model = Despacho
+        fields = ['lote', 'fecha_despacho', 'cant_despacho']
+        labels = {
+            'lote': 'Lote', 
+            'fecha_despacho': 'Fecha de Despacho',
+            'cant_despacho': 'cant_despacho'
+        }
+
+class GuiaDespachoForm(forms.ModelForm):
+    class Meta:
+        model = Despacho
+        fields = ['guia_despacho']
+        labels = {
+            'Guia de Despacho': 'guia_despacho'
+        }
 #"""
