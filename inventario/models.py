@@ -178,7 +178,7 @@ class Despacho(models.Model):
     despacho_id = models.AutoField(primary_key=True)
     lote = models.ForeignKey(LoteProd, on_delete=models.CASCADE)
     fecha_despacho = models.DateField(default=datetime.date.today, auto_now_add=False)
-    tipo_despacho = models.CharField(max_length=50, default = 'Despacho', null=False)     
+    tipo_despacho = models.CharField(max_length=50, default = 'PENDIENTE GUIA DESPACHO', null=False)     
     cant_despacho = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
     guia_despacho = models.IntegerField(default=0, null=False)
 

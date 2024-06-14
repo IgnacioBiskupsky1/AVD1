@@ -18,10 +18,10 @@ urlpatterns = [
     #path('user_list/', views.user_list,  name='user_list'),
 
     path('admin/', admin.site.urls),
-    path('', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
-    path('logout', auth_views.LogoutView.as_view(), name='logout'),
-
     path('home/', views.home, name='home'),
+    path('', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    #path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 
 
     path('crud_usuario/', views.crud_usuario, name='crud_usuario'),
@@ -71,10 +71,12 @@ urlpatterns = [
     path('crud_stock_mp/', views.crud_stock_mp, name='crud_stock_mp'),
     path('ingresar_stock_mp/',views.ingresar_stock_mp, name='ingresar_stock_mp'),
     path('editar_stock_mp/<int:stock_ad_id>/',views.editar_stock_mp, name='editar_stock_mp'),
+    path('agregar_stock_mp/',views.agregar_stock_mp, name='agregar_stock_mp'),
     
     path('crud_stock_insumo/', views.crud_stock_insumo, name='crud_stock_insumo'),
     path('ingresar_stock_insumo/',views.ingresar_stock_insumo, name='ingresar_stock_insumo'),
     path('editar_stock_insumo/<int:stock_in_id>/',views.editar_stock_insumo, name='editar_stock_insumo'),
+    path('agregar_stock_insumo/',views.agregar_stock_insumo, name='agregar_stock_insumo'),
 
     path('crud_orden_prod/', views.crud_orden_prod, name='crud_orden_prod'),
     path('ingresar_orden_prod/',views.ingresar_orden_prod, name='ingresar_orden_prod'),
@@ -91,9 +93,12 @@ urlpatterns = [
     path('crud_despacho/', views.crud_despacho, name='crud_despacho'),
     path('ingresar_despacho/', views.ingresar_despacho, name='ingresar_despacho'),
     path('crud_lote_desp/', views.crud_lote_desp, name='crud_lote_desp'),
+    path('confirmar_despacho/<int:despacho_id>/',views.confirmar_despacho, name='confirmar_despacho'),
 
     path('crud_guia_despacho/', views.crud_guia_despacho, name='crud_guia_despacho'),
     path('editar_guia_despacho/<int:despacho_id>/',views.editar_guia_despacho, name='editar_guia_despacho'),
+
+    path('crud_reporte/', views.crud_reporte, name='crud_reporte'),
     
     ]
 

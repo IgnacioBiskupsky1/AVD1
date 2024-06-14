@@ -18,19 +18,31 @@
                         <th scope="col">ID</th>
                         <th scope="col">Nombre Materia Prima</th>
                         <th scope="col">Stock</th>
+                        <th scope="col">Cantidad a Agregar</th>
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for stockmp in stockmps %} 
                     <tr>
-                                               
-                        <td scope="row">{{ stockmp.stock_ad_id }}</td>
-                        <td>{{ stockmp.nomAditivo }}</td>
-                        <td>{{ stockmp.stock_ad_cant_lt }}</td>
-                        <td>
-                            <a name="" id="" class="btn btn-info" href="/editar_stock_mp/{{ stockmp.stock_ad_id }}" role="button">Editar</a>
-                        </td>
+                        <form method="post" action="/agregar_stock_mp/">
+                            {% csrf_token%}                       
+                            <td scope="row">{{ stockmp.stock_ad_id }}</td>
+                            <td>{{ stockmp.nomAditivo }}</td>
+                            <td>{{ stockmp.stock_ad_cant_lt }}</td>
+                            <td>
+                                <input type="text" id="cantidad_mp" name="cantidad_mp" class="form-control"/>
+                                <input type="hidden" name="stock_ad_id" value="{{ stockmp.stock_ad_id }}"/>
+                            <td>
+                                {% if grupo.name == 'GESTION'%}
+                                <a name="" id="" class="btn btn-info" href="/editar_stock_mp/{{ stockmp.stock_ad_id }}" role="button">Editar</a> |
+                                {% endif%}
+                            
+                                {% if grupo.name == 'GESTION' or grupo.name == 'PATIO' or username == 'admin'%}
+                                <button type="submit" class="btn btn-info">Agregar Stock</button>
+                                {% endif%}
+                            </td>
+                        </form>
                     </tr>
                     {% endfor %}
                 </tbody>

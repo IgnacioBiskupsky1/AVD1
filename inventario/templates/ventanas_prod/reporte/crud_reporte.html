@@ -26,13 +26,15 @@
                 <tbody>
                     {% for desp in desps %} 
                     <tr>
-                        {% if desp.estado_produccion == "PENDIENTE" %}                                               
-                        <td scope="row">{{ desp.lote_prod_id }}</td>
-                        <td>{{ desp.lote_prod_fecha }}</td>
-                        <td>{{ desp.prod_copec.producto }}</td>
-                        <td>{{ desp.volumen_odp }}</td>
-                        <td>{{ desp.prod_copec.insumo }}</td>
-                        <td>{{ desp.estado_produccion }}</td>
+                        {% if desp.tipo_despacho == "DESPACHADO" %}                                               
+                        <td scope="row">{{ desp.fecha_despacho }}</td>
+                        <td>{{ desp.tipo_despacho }}</td>
+                        <td>{{ desp.lote.prod_copec.prod_copec_cod }}</td>
+                        <td>{{ desp.cant_despacho }}</td>
+                        <td>{{ desp.lote.prod_copec.insumo }}</td>
+                        <td>{{ desp.lote.prod_copec.producto }}</td>
+                        <td>{{ desp.lote.lote_prod_id }}</td>
+                        <td>{{ desp.guia_despacho }}</td>
                     </tr>
                     {% endif %}
                     {% endfor %}

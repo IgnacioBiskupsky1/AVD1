@@ -38,7 +38,10 @@
                 {% if grupo.name == 'GUIA_DESP' or username == 'admin' %}
                     <a class="nav-item nav-link active" href="/crud_guia_despacho">Guias De Despacho</a>
                 {% endif %}
-                                                
+                
+                {% if grupo.name == 'GESTION' or username == 'admin'  %}
+                    <a class="nav-item nav-link active" href="/crud_reporte">Reporte Diario</a>
+                {% endif %}
                 <a class="nav-item nav-link active" href="#" onclick="logout('{{ csrf_token }}', '{% url "logout" %}', '{% url "login" %}')">Cerrar Sesión</a>
             </div>
         </nav>

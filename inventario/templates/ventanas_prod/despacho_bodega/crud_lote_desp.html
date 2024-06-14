@@ -30,7 +30,7 @@
                     <tr>
                         <form method="post" action="/ingresar_despacho/">
                             {% csrf_token %}
-                            {% if odp.estado_produccion == "DISPONIBLE" %}
+                            {% if odp.estado_produccion == "DISPONIBLE PARA DESPACHO" %}
                             <td scope="row">{{ odp.lote_prod_id }}</td>
                             <td>{{ odp.lote_prod_fecha }}</td>
                             <td>{{ odp.prod_copec.producto }}</td>
