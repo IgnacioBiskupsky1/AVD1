@@ -93,8 +93,13 @@ def home(request):
 
 @login_required(login_url='login')
 def crud_mp(request):
-    mps = InfoAditivo.objects.all()
-    return render(request, 'inventary/materia_prima/crud_mp.html', {'mps': mps})
+    
+    context = {
+            'mps': InfoAditivo.objects.all(),
+            'grupo': request.user.groups.first()
+        }
+    
+    return render(request, 'inventary/materia_prima/crud_mp.html', context)
 
 @login_required(login_url='login')
 def ingresar_mp(request):
@@ -553,10 +558,7 @@ def ingresar_despacho(request):
 
 @login_required(login_url='login')
 def confirmar_despacho(request, despacho_id):
-    #desp = get_object_or_404(Despacho, despacho_id=despacho_id)
-
-    # Aquí obtén los valores necesarios, por ejemplo:
-    #desp_id = desp.despacho_id  
+ 
     # Llama a la función agregar_stock con los parámetros necesarios
     try:
         despachar(despacho_id)

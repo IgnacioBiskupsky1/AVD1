@@ -96,7 +96,7 @@ def generar_despacho(lote_prod_id, cantidad):
             # Actualizar la cantidad del lote de producción
             lote.cant_prod = lote.cant_prod - cantidad
             
-            if lote.cant_prod == 0:
+            if lote.cant_prod == 0.0:
                 lote.estado_produccion = 'DESPACHADO'
             
             lote.save()
@@ -113,9 +113,8 @@ def generar_despacho(lote_prod_id, cantidad):
 def aumentar_stock_mp(stock_ad_id, cantidad):
     try:        
         # Obtener el lote de producción
-        stockmp = StockAditivo.objects.select_for_update().get(stock_ad_id=stock_ad_id)
-
-        # Actualizar la cantidad del lote de producción
+        stockmp = StockAditivo.objects.select_for_update().get(stock_ad_id=stock_ad_id)   
+        
         stockmp.stock_ad_cant_lt = stockmp.stock_ad_cant_lt + cantidad
         stockmp.save()
 
@@ -125,6 +124,16 @@ def aumentar_stock_mp(stock_ad_id, cantidad):
         raise ValueError(f"Stock con ID {stock_ad_id} no encontrado")
     except Exception as e:
         raise ValueError(f"Error al actualizar el despacho: {str(e)}")
+
+        """
+        lote = LoteProd.objects.select_for_update().get(lote_prod_id=lote_prod_id)
+        lote_prod_id = stockmp.lote.lote_prod_id
+        # Actualizar la cantidad del lote de producción
+        if lote.cant_prod == 0.0:
+            lote.estado_produccion = 'DESPACHADO'
+        
+        lote.save()
+        """
 
 ##############################################################################################################
 
