@@ -33,11 +33,9 @@ urlpatterns = [
     path('ingresar_mp/',views.ingresar_mp, name='ingresar_mp'),
     path('editar_mp/<int:adtv_id>/',views.editar_mp, name='editar_mp'),
     path('eliminar_mp/<int:adtv_id>/', views.eliminar_mp, name='eliminar_mp'),
-    path('listar_mp',views.listar_mp, name='listar_mp'),
     path('crud_mp/', views.crud_mp, name='crud_mp'),
 
 
-    path('listar_in',views.listar_in, name='listar_in'),
     path('ingresar_insumo',views.ingresar_in, name='ingresar_insumo'),
     path('eliminar_insumo/<int:insumo_id>/',views.eliminar_in, name='eliminar_insumo'),
     path('editar_insumo/<int:insumo_id>/',views.editar_in, name='editar_insumo'),

@@ -5,8 +5,24 @@
 {% block contenido %} 
 <br>
 <div class="card">
-    <div class="card-header">
-        <a name="" id="" class="btn btn-success" href="/crud_despacho" role="button">Lista de Despachos</a>
+    <div class="card-header d-flex justify-content-between">
+        <div>
+            <a name="" id="" class="btn btn-success" href="/crud_despacho" role="button">Lista de Despachos</a>
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                Ordenar por
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" href="?sort_by=lote_prod_id&direction={% if sort_by == 'lote_prod_id' and direction == 'asc' %}desc{% else %}asc{% endif %}">Lote</a></li>
+                <li><a class="dropdown-item" href="?sort_by=lote_prod_fecha&direction={% if sort_by == 'lote_prod_fecha' and direction == 'asc' %}desc{% else %}asc{% endif %}">Fecha</a></li>
+                <li><a class="dropdown-item" href="?sort_by=prod_copec__producto&direction={% if sort_by == 'prod_copec__producto' and direction == 'asc' %}desc{% else %}asc{% endif %}">Producto</a></li>
+                <li><a class="dropdown-item" href="?sort_by=prod_copec__insumo&direction={% if sort_by == 'prod_copec__insumo' and direction == 'asc' %}desc{% else %}asc{% endif %}">Insumo</a></li>
+                <li><a class="dropdown-item" href="?sort_by=cant_prod&direction={% if sort_by == 'cant_prod' and direction == 'asc' %}desc{% else %}asc{% endif %}">Cantidad</a></li>
+                <li><a class="dropdown-item" href="?sort_by=estado_produccion&direction={% if sort_by == 'estado_produccion' and direction == 'asc' %}desc{% else %}asc{% endif %}">Estado</a></li>
+                                     
+            </ul>
+        </div>
     </div>
     <div class="card-body">
         <h5 class="card-title">Lotes Disponibles para Despacho</h5>

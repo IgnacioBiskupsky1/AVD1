@@ -3,72 +3,10 @@ from django.conf import settings
 from django.db import models 
 from django.contrib.auth.models import User #AbstractBaseUser, BaseUserManager
 import datetime
+from auditlog.registry import auditlog
 
 
-# Create your models here.
-"""
-class UsuarioManager(BaseUserManager):
-	def create_user(self, email, username, nombres, apellidos,tipo_usuario, password=None):
-		if not email:
-			raise ValueError('El usuario debe tener un Correo Electrónico')
-
-		usuario = self.model(
-			username = username, 
-			email = self.normalize_email(email), 
-			nombres = nombres, 
-			apellidos = apellidos,
-            tipo_usuario = tipo_usuario
-		)
-        	
-		usuario.set_password(password)
-		usuario.save()
-		return usuario
-
-	def create_superuser(self, email, username, nombres, apellidos,tipo_usuario, password):
-		usuario = self.create_user(
-			email,
-			username = username, 
-			nombres = nombres, 
-			apellidos = apellidos,
-			password = password,
-            tipo_usuario = tipo_usuario
-		)
-		
-		usuario.usuario_administrador = True
-		usuario.save()
-		return usuario
-	
-
-class Usuario(AbstractBaseUser):
-	username = models.CharField('Nombre de usuario', unique = True, max_length=100)
-	email = models.EmailField('Correo Electronico', unique = True, max_length=254)
-	nombres = models.CharField('Nombres', blank = True, max_length=200, null = True)
-	apellidos = models.CharField('Apellidos', blank = True, max_length=200, null = True)
-	#imagen = models.ImageField('Imagen de Perfil', upload_to='perfil/', height_field=None, width_field=None, max_length = 200, blank = True, null = True)
-	usuario_activo = models.BooleanField(default=True)
-	usuario_administrador = models.BooleanField(default=False)
-	tipo_usuario = models.CharField('Tipo de Usuario', unique = True, max_length = 20, null = False, default = 'NA')
-	objects = UsuarioManager()
-	
-	USERNAME_FIELD = 'username'
-	REQUIRED_FIELDS = ['email', 'nombres', 'apellidos', 'tipo_usuario']
-
-	def __str__(self):
-		return f'Usuario {self.username},{self.apellidos}'
-
-	def has_perm(self,perm,obj = None):
-		return True
-
-	def has_module_perms(self, app_label):
-		return True
-
-	@property
-	def is_staff(self):
-		return self.usuario_administrador
-
-"""
-"""
-"""    
+# Create your models here.   
 
 class Insumo(models.Model):
     insumo_id = models.AutoField(primary_key=True)
@@ -188,12 +126,21 @@ class Despacho(models.Model):
             ("can_access_crud_despacho", "Can access crud_despacho view")
         ]
 
-
+auditlog.register(Insumo)
+auditlog.register(InfoAditivo)
+auditlog.register(Producto)
+auditlog.register(CompProducto)
+auditlog.register(ProdCopec)
+auditlog.register(StockAditivo)
+auditlog.register(StockProducto)
+auditlog.register(StockInsumo)
+auditlog.register(LoteProd)
+auditlog.register(Despacho)
+auditlog.register(User)
 """
 
 
 ###################################### ESTO NO SIRVE (...POR AHORA) #############################################
-
 
 #class StockProducto(models.Model):
 #    stock_producto_id = models.AutoField(primary_key=True)
@@ -248,5 +195,67 @@ class Despacho(models.Model):
 #    prod_api = models.CharField(max_length=50, blank=True, null=True)
 #    prod_tk_agua = models.IntegerField(null=True, blank=True)
 #    prod_tk_prod = models.IntegerField(null=True, blank=True)   
+
+"""
+
+"""
+class UsuarioManager(BaseUserManager):
+	def create_user(self, email, username, nombres, apellidos,tipo_usuario, password=None):
+		if not email:
+			raise ValueError('El usuario debe tener un Correo Electrónico')
+
+		usuario = self.model(
+			username = username, 
+			email = self.normalize_email(email), 
+			nombres = nombres, 
+			apellidos = apellidos,
+            tipo_usuario = tipo_usuario
+		)
+        	
+		usuario.set_password(password)
+		usuario.save()
+		return usuario
+
+	def create_superuser(self, email, username, nombres, apellidos,tipo_usuario, password):
+		usuario = self.create_user(
+			email,
+			username = username, 
+			nombres = nombres, 
+			apellidos = apellidos,
+			password = password,
+            tipo_usuario = tipo_usuario
+		)
+		
+		usuario.usuario_administrador = True
+		usuario.save()
+		return usuario
+	
+
+class Usuario(AbstractBaseUser):
+	username = models.CharField('Nombre de usuario', unique = True, max_length=100)
+	email = models.EmailField('Correo Electronico', unique = True, max_length=254)
+	nombres = models.CharField('Nombres', blank = True, max_length=200, null = True)
+	apellidos = models.CharField('Apellidos', blank = True, max_length=200, null = True)
+	#imagen = models.ImageField('Imagen de Perfil', upload_to='perfil/', height_field=None, width_field=None, max_length = 200, blank = True, null = True)
+	usuario_activo = models.BooleanField(default=True)
+	usuario_administrador = models.BooleanField(default=False)
+	tipo_usuario = models.CharField('Tipo de Usuario', unique = True, max_length = 20, null = False, default = 'NA')
+	objects = UsuarioManager()
+	
+	USERNAME_FIELD = 'username'
+	REQUIRED_FIELDS = ['email', 'nombres', 'apellidos', 'tipo_usuario']
+
+	def __str__(self):
+		return f'Usuario {self.username},{self.apellidos}'
+
+	def has_perm(self,perm,obj = None):
+		return True
+
+	def has_module_perms(self, app_label):
+		return True
+
+	@property
+	def is_staff(self):
+		return self.usuario_administrador
 
 """

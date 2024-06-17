@@ -18,10 +18,10 @@
                         <th scope="col">Id</th>
                         <th scope="col">Nombre de Usuario</th>
                         <th scope="col">Email</th>
-                        <th scope="col">Nombres</th>
-                        <th scope="col">Apellidos</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Apellido</th>
                         <th scope="col">Admin</th>
-                        <th scope="col">Tipo de Usuario</th>
+                        <th scope="col">Grupo</th>
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
@@ -34,7 +34,7 @@
                         <td>{{ user.nombres }}</td>
                         <td>{{ user.apellidos }}</td>
                         <td>{{ user.usuario_administrador }}</td>
-                        <td>{{ user.tipo_usuario }}</td>                        
+                        <td>{{ user.groups.first }}</td>                        
                         <td>
                             <a name="" id="" class="btn btn-info" href="/editar_usuario/{{ user.pk }}/" role="button">Editar</a> | 
                             <a name="" id="" class="btn btn-danger" href="/eliminar_usuario/{{ user.pk }}" role="button">Eliminar</a>

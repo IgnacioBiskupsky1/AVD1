@@ -5,12 +5,25 @@
 {% block contenido %} 
 <br>
 <div class="card">
-    <div class="card-header">
+    <div class="card-header d-flex justify-content-between">
         <a name="" id="" class="btn btn-success" href="/ingresar_orden_prod" role="button">Ingresar Orden de Producción</a>
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                Ordenar por
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" href="?sort_by=lote_prod_id&direction={% if sort_by == 'lote_prod_id' and direction == 'asc' %}desc{% else %}asc{% endif %}">Lote</a></li>
+                <li><a class="dropdown-item" href="?sort_by=lote_prod_fecha&direction={% if sort_by == 'lote_prod_fecha' and direction == 'asc' %}desc{% else %}asc{% endif %}">Fecha</a></li>
+                <li><a class="dropdown-item" href="?sort_by=prod_copec__producto&direction={% if sort_by == 'prod_copec__producto' and direction == 'asc' %}desc{% else %}asc{% endif %}">Producto</a></li>
+                <li><a class="dropdown-item" href="?sort_by=volumen_odp&direction={% if sort_by == 'volumen_odp' and direction == 'asc' %}desc{% else %}asc{% endif %}">Cantidad</a></li>
+                <li><a class="dropdown-item" href="?sort_by=prod_copec__insumo&direction={% if sort_by == 'prod_copec__insumo' and direction == 'asc' %}desc{% else %}asc{% endif %}">Insumo</a></li>
+                <li><a class="dropdown-item" href="?sort_by=cliente&direction={% if sort_by == 'cliente' and direction == 'asc' %}desc{% else %}asc{% endif %}">Cliente</a></li>
+                <li><a class="dropdown-item" href="?sort_by=estado_produccion&direction={% if sort_by == 'estado_produccion' and direction == 'asc' %}desc{% else %}asc{% endif %}">Estado</a></li>
+            </ul>
+        </div>
     </div>
     <div class="card-body">
         <h5 class="card-title">Planificación de Producción</h5>
-
         <div class="table-responsive">
             <table class="table table-primary">
                 <thead>
@@ -18,7 +31,7 @@
                         <th scope="col">Lote</th>
                         <th scope="col">Fecha</th>
                         <th scope="col">Producto</th>
-                        <th scope="col">LITROS</th>
+                        <th scope="col">Cantidad [Lt.]</th>
                         <th scope="col">Envases</th>
                         <th scope="col">Cliente</th>
                         <th scope="col">Estado</th>
@@ -29,7 +42,6 @@
                 <tbody>
                     {% for odp in odps %} 
                     <tr>
-                                               
                         <td scope="row">{{ odp.lote_prod_id }}</td>
                         <td>{{ odp.lote_prod_fecha }}</td>
                         <td>{{ odp.prod_copec.producto }}</td>

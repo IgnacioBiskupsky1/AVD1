@@ -5,15 +5,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, permission_required
 from .forms import UserForm, InfoAditivoForm, ProductoForm, CompProductoForm, StockAditivoForm, InsumoForm, StockProductoForm, StockInsumoForm, ProdCopecForm, OdpForm, CalidadForm, GuiaDespachoForm
-from .models import InfoAditivo, Producto, CompProducto, StockAditivo, Insumo, StockProducto, StockInsumo, ProdCopec, LoteProd, Despacho
+from .models import InfoAditivo, Producto, CompProducto, StockAditivo, Insumo, StockProducto, StockInsumo, ProdCopec, LoteProd, Despacho 
 from django.http import HttpResponse
-from django.middleware.csrf import get_token
 from .utils import link_callback, agregar_stock, generar_despacho, aumentar_stock_mp, aumentar_stock_insumo, actualizar_despacho, despachar
 from django.http import HttpResponseForbidden
 from decimal import Decimal
 from django.template.loader import render_to_string
 from xhtml2pdf import pisa
-from .decorators import allowed_users
 
 
 # Create your views here.
@@ -21,7 +19,14 @@ from .decorators import allowed_users
 @login_required(login_url='login')
 def crud_usuario(request):
     users = User.objects.all ()
-    return render(request, 'usercrud/crud_usuario.html', {'users': users})
+    grupo = request.user.groups.first()
+    
+    context = {
+        'users': users,
+        'grupo': grupo
+    }
+    
+    return render(request, 'usercrud/crud_usuario.html', context)
 
 @login_required(login_url='login')
 def crear_usuario(request):
@@ -32,7 +37,14 @@ def crear_usuario(request):
             return redirect('/crud_usuario')
     else:
         form = UserForm()
-    return render(request, 'usercrud/crear_usuario.html', {'form': form})
+
+    grupo = request.user.groups.first()
+
+    context = {
+        'form': form,
+        'grupo': grupo
+    }
+    return render(request, 'usercrud/crear_usuario.html', context)
 
 @login_required(login_url='login') 
 def editar_usuario(request, pk):
@@ -44,7 +56,14 @@ def editar_usuario(request, pk):
             return redirect('/crud_usuario')
     else:
         form = UserForm(instance=user)
-    return render(request, 'usercrud/editar_usuario.html', {'form': form})    
+
+    grupo = request.user.groups.first()
+    
+    context = {
+        'form': form,
+        'grupo': grupo
+    }
+    return render(request, 'usercrud/editar_usuario.html', context)    
 
 @login_required(login_url='login')
 def eliminar_usuario(request, pk):
@@ -52,7 +71,14 @@ def eliminar_usuario(request, pk):
     if request.method == 'POST':
         user.delete()
         return redirect('/crud_usuario')
-    return render(request, 'usercrud/eliminar_usuario.html', {'user': user})
+    
+    grupo = request.user.groups.first()
+    
+    context = {
+        'user': user,
+        'grupo': grupo
+    }
+    return render(request, 'usercrud/eliminar_usuario.html', context)
 
 
 ##################################### METODOS LOGIN LOGOUT #####################################
@@ -82,20 +108,29 @@ def logout_view(request):
 
 @login_required(login_url='login')
 #@allowed_users(allowed_roles=['GESTION'])
-def home(request):    
+def home(request):
+
     context = {
         'username': request.user.username,
         'grupo': request.user.groups.first()
     }
+
     return render(request, 'usercrud/welcome_user.html', context)
 
 ##################################### METODOS MATERIA PRIMA #####################################
 
 @login_required(login_url='login')
 def crud_mp(request):
-    
+
+    sort_by = request.GET.get('sort_by', 'adtv_id')
+    direction = request.GET.get('direction', 'asc')
+
+    if direction == 'desc':
+        sort_by = '-' + sort_by
     context = {
-            'mps': InfoAditivo.objects.all(),
+            'mps': InfoAditivo.objects.all().order_by(sort_by),
+            'sort_by': sort_by.strip('-'), 
+            'direction': direction,
             'grupo': request.user.groups.first()
         }
     
@@ -110,7 +145,15 @@ def ingresar_mp(request):
             return redirect('/crud_mp')  
     else:
         form = InfoAditivoForm()
-    return render(request, 'inventary/materia_prima/ingresar_mp.html', {'form': form})
+
+    grupo = request.user.groups.first()
+    
+    context = {
+        'form': form,
+        'grupo': grupo
+    }
+    
+    return render(request, 'inventary/materia_prima/ingresar_mp.html', context)
 
 @login_required(login_url='login')
 def editar_mp(request, adtv_id):
@@ -122,34 +165,59 @@ def editar_mp(request, adtv_id):
             return redirect('/crud_mp')
     else:
         form = InfoAditivoForm(instance=aditivo)
-    return render(request, 'inventary/materia_prima/editar_mp.html', {'form': form})
+
+    grupo = request.user.groups.first()
+    
+    context = {
+        'form': form,
+        'grupo': grupo
+    }
+
+    return render(request, 'inventary/materia_prima/editar_mp.html', context)
 
 @login_required(login_url='login')
 def eliminar_mp(request, adtv_id):
     aditivo = get_object_or_404(InfoAditivo, adtv_id=adtv_id)
     if request.method == 'POST':
         aditivo.delete()
-        return redirect('/crud_mp')  
-    return render(request, 'inventary/materia_prima/eliminar_mp.html', {'aditivo': aditivo})
+        return redirect('/crud_mp')
 
-@login_required(login_url='login')
-def listar_mp(request):
-    mps = InfoAditivo.objects.all()
-    return render(request, 'inventary/materia_prima/listar_mp.html', {'mps': mps}) 
+    grupo = request.user.groups.first()
+    
+    context = {
+        'aditivo': aditivo,
+        'grupo': grupo
+    }
+
+    return render(request, 'inventary/materia_prima/eliminar_mp.html', context)
 
 ##################################### METODOS INSUMO #####################################
 @login_required(login_url='login')
 def crud_insu(request):
-    insus = Insumo.objects.all()
-    return render(request, 'inventary/insumos/crud_insu.html', {'insus': insus}) 
 
-@login_required(login_url='login')
-def listar_in(request):
-    insus = Insumo.objects.all()
-    return render(request, 'inventary/insumos/listar_insumo.html', {'insus': insus})
+    sort_by = request.GET.get('sort_by', 'insumo_id')
+    direction = request.GET.get('direction', 'asc')
+
+    if direction == 'desc':
+        sort_by = '-' + sort_by
+
+    insus = Insumo.objects.all().order_by(sort_by)
+
+    grupo = request.user.groups.first()
+    
+    context = {
+        'insus': insus,
+        'sort_by': sort_by.strip('-'), 
+        'direction': direction,
+        'grupo': grupo
+    }
+
+    return render(request, 'inventary/insumos/crud_insu.html', context) 
+
 
 @login_required(login_url='login')
 def ingresar_in(request):
+
     if request.method == 'POST':
         form = InsumoForm(request.POST)
         if form.is_valid():
@@ -157,18 +225,36 @@ def ingresar_in(request):
             return redirect('/crud_insu')
     else:
         form = InsumoForm()
-    return render(request, 'inventary/insumos/ingresar_insumo.html', {'form': form})
+
+    grupo = request.user.groups.first()
+    
+    context = {
+        'form': form,
+        'grupo': grupo
+    }
+
+    return render(request, 'inventary/insumos/ingresar_insumo.html', context)
 
 @login_required(login_url='login')
 def eliminar_in(request, insumo_id):
+
     insumo = get_object_or_404(Insumo, insumo_id=insumo_id)
     if request.method == 'POST':
         insumo.delete()
-        return redirect('/crud_insu')  
-    return render(request, 'inventary/insumos/eliminar_insumo.html', {'insumo': insumo})
+        return redirect('/crud_insu')
+    
+    grupo = request.user.groups.first()
+    
+    context = {
+        'insumo': insumo,
+        'grupo': grupo
+    }
+
+    return render(request, 'inventary/insumos/eliminar_insumo.html', context)
 
 @login_required(login_url='login')
 def editar_in(request, insumo_id):
+
     insumo = get_object_or_404(Insumo, insumo_id=insumo_id)
     if request.method == 'POST':
         form = InsumoForm(request.POST, instance=insumo)
@@ -177,16 +263,34 @@ def editar_in(request, insumo_id):
             return redirect('/crud_insu')  
     else:
         form = InsumoForm(instance=insumo)
-    return render(request, 'inventary/insumos/editar_insumo.html', {'form': form})
+
+    grupo = request.user.groups.first()
+    
+    context = {
+        'form': form,
+        'grupo': grupo
+    }
+
+    return render(request, 'inventary/insumos/editar_insumo.html', context)
 
 ##################################### METODOS PRODUCTO #####################################
 @login_required(login_url='login')
 def crud_producto(request):
+
     productos = Producto.objects.all()
-    return render(request, 'inventary/productos/crud_producto.html', {'productos': productos}) 
+
+    grupo = request.user.groups.first()
+    
+    context = {
+        'productos': productos,
+        'grupo': grupo
+    }
+
+    return render(request, 'inventary/productos/crud_producto.html', context) 
 
 @login_required(login_url='login')
 def ingresar_producto(request):
+
     if request.method == 'POST':
         form = ProductoForm(request.POST)
         if form.is_valid():
@@ -194,10 +298,18 @@ def ingresar_producto(request):
             return redirect('/crud_comp')  
     else:
         form = ProductoForm()
-    return render(request,'inventary/productos/ingresar_producto.html', {'form': form})
+    
+    grupo = request.user.groups.first()
+    
+    context = {
+        'form': form,
+        'grupo': grupo
+    }
+    return render(request,'inventary/productos/ingresar_producto.html', context)
 
 @login_required(login_url='login')
 def editar_producto(request, producto_id):
+
     producto = get_object_or_404(Producto, producto_id=producto_id)
     if request.method == 'POST':
         form = ProductoForm(request.POST, instance=producto)
@@ -206,24 +318,51 @@ def editar_producto(request, producto_id):
             return redirect('/crud_producto')  
     else:
         form = ProductoForm(instance=producto)
-    return render(request, 'inventary/productos/editar_producto.html', {'form': form})
+    
+    grupo = request.user.groups.first()
+    
+    context = {
+        'form': form,
+        'grupo': grupo
+    }
+
+    return render(request, 'inventary/productos/editar_producto.html', context)
 
 @login_required(login_url='login')
 def eliminar_producto(request, producto_id):
+
     producto = get_object_or_404(Producto, producto_id=producto_id)
     if request.method == 'POST':
         producto.delete()
         return redirect('/crud_producto')
-    return render(request, 'inventary/productos/eliminar_producto.html', {'producto': producto})
+
+    grupo = request.user.groups.first()
+    
+    context = {
+        'producto': producto,
+        'grupo': grupo
+    }
+
+    return render(request, 'inventary/productos/eliminar_producto.html', context)
 
 ##################################### METODOS PRODUCTO COPEC #####################################
 @login_required(login_url='login')
 def crud_producto_copec(request):
+
     productos = ProdCopec.objects.all()
-    return render(request, 'inventary/prod_copec/crud_producto_copec.html', {'productos': productos}) 
+
+    grupo = request.user.groups.first()
+    
+    context = {
+        'productos': productos,
+        'grupo': grupo
+    }
+
+    return render(request, 'inventary/prod_copec/crud_producto_copec.html', context) 
 
 @login_required(login_url='login')
 def ingresar_producto_copec(request):
+
     if request.method == 'POST':
         form = ProdCopecForm(request.POST)
         if form.is_valid():
@@ -231,10 +370,19 @@ def ingresar_producto_copec(request):
             return redirect('/crud_producto_copec')  
     else:
         form = ProdCopecForm()
-    return render(request,'inventary/prod_copec/ingresar_producto_copec.html', {'form': form})
+
+    grupo = request.user.groups.first()
+    
+    context = {
+        'form': form,
+        'grupo': grupo
+    }
+
+    return render(request,'inventary/prod_copec/ingresar_producto_copec.html', context)
 
 @login_required(login_url='login')
 def editar_producto_copec(request, prod_copec_id):
+
     producto = get_object_or_404(ProdCopec, prod_copec_id=prod_copec_id)
     if request.method == 'POST':
         form = ProdCopecForm(request.POST, instance=producto)
@@ -243,15 +391,32 @@ def editar_producto_copec(request, prod_copec_id):
             return redirect('/crud_producto_copec')  
     else:
         form = ProdCopecForm(instance=producto)
-    return render(request, 'inventary/prod_copec/editar_producto_copec.html', {'form': form})
+
+    grupo = request.user.groups.first()
+    
+    context = {
+        'form': form,
+        'grupo': grupo
+    }
+
+    return render(request, 'inventary/prod_copec/editar_producto_copec.html', context)
 
 @login_required(login_url='login')
 def eliminar_producto_copec(request, prod_copec_id):
+
     producto = get_object_or_404(ProdCopec, prod_copec_id=prod_copec_id)
     if request.method == 'POST':
         producto.delete()
-        return redirect('/crud_producto_copec')  
-    return render(request, 'inventary/prod_copec/eliminar_producto_copec.html', {'producto': producto})
+        return redirect('/crud_producto_copec')
+    
+    grupo = request.user.groups.first()
+    
+    context = {
+        'producto': producto,
+        'grupo': grupo
+    }
+
+    return render(request, 'inventary/prod_copec/eliminar_producto_copec.html', context)
 
 ##################################### METODOS COMPOSICION #####################################
 @login_required(login_url='login')
@@ -266,14 +431,20 @@ def crud_comp(request):
     
     productos = CompProducto.objects.values_list('producto__producto_nom', flat=True).distinct()
     
-    return render(request, 
-                  'inventary/comp_producto/crud_comp.html',
-                  {'comps': comps, 'productos': productos,
-                   'producto_seleccionado': producto_seleccionado
-                   }) 
+    grupo = request.user.groups.first()
+    
+    context = {
+        'comps': comps, 
+        'productos': productos,
+        'producto_seleccionado': producto_seleccionado,
+        'grupo': grupo
+    }
+
+    return render(request,'inventary/comp_producto/crud_comp.html', context) 
 
 @login_required(login_url='login')
 def ingresar_comp(request):
+
     if request.method == 'POST':
         form = CompProductoForm(request.POST)
         if form.is_valid():
@@ -281,10 +452,19 @@ def ingresar_comp(request):
             return redirect('/crud_comp')  
     else:
         form = CompProductoForm()
-    return render(request, 'inventary/comp_producto/ingresar_comp.html', {'form': form})
+
+    grupo = request.user.groups.first()
+    
+    context = {
+        'form': form,
+        'grupo': grupo
+    }
+
+    return render(request, 'inventary/comp_producto/ingresar_comp.html', context)
 
 @login_required(login_url='login')
 def editar_comp(request, comp_producto_id):
+
     composicion = get_object_or_404(CompProducto, comp_producto_id=comp_producto_id)
     if request.method == 'POST':
         form = CompProductoForm(request.POST, instance=composicion)
@@ -293,23 +473,36 @@ def editar_comp(request, comp_producto_id):
             return redirect('/crud_comp')  
     else:
         form = CompProductoForm(instance=composicion)
-    return render(request, 'inventary/comp_producto/editar_comp.html', {'form': form})
+
+    grupo = request.user.groups.first()
+    
+    context = {
+        'form': form,
+        'grupo': grupo
+    }
+
+    return render(request, 'inventary/comp_producto/editar_comp.html', context)
 
 @login_required(login_url='login')
 def eliminar_comp(request, comp_producto_id):
+
     composicion = get_object_or_404(CompProducto, comp_producto_id=comp_producto_id)
     if request.method == 'POST':
         composicion.delete()
         return redirect('/crud_comp')
-    return render(request, 'inventary/comp_producto/eliminar_comp.html', {'composicion': composicion})
-
+    
+    context = {
+        'composicion': composicion,
+        'grupo': request.user.groups.first()
+    }
+    return render(request, 'inventary/comp_producto/eliminar_comp.html', context)
 
 ##################################### METODOS STOCK MP #####################################
 @permission_required('inventario.can_access_crud_stock_mp', raise_exception=True)
 @login_required(login_url='login')
 def crud_stock_mp(request):
+
     context = {
-        'username': request.user.username,
         'grupo': request.user.groups.first(),
         'stockmps': StockAditivo.objects.all()
     }
@@ -317,6 +510,7 @@ def crud_stock_mp(request):
 
 @login_required(login_url='login')
 def ingresar_stock_mp(request):
+
     if request.method == 'POST':
         form = StockAditivoForm(request.POST)
         if form.is_valid():
@@ -324,10 +518,17 @@ def ingresar_stock_mp(request):
             return redirect('/crud_stock_mp') 
     else:
         form = StockAditivoForm()
-    return render(request, 'inventary/stock_mp/ingresar_stock_mp.html', {'form': form})
+    
+    context = {
+        'form': form,
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request, 'inventary/stock_mp/ingresar_stock_mp.html', context)
 
 @login_required(login_url='login')
 def editar_stock_mp(request, stock_ad_id):
+
     stockmp = get_object_or_404(StockAditivo, stock_ad_id=stock_ad_id)
     if request.method == 'POST':
         form = StockAditivoForm(request.POST, instance=stockmp)
@@ -336,7 +537,13 @@ def editar_stock_mp(request, stock_ad_id):
             return redirect('/crud_stock_mp')  
     else:
         form = StockAditivoForm(instance=stockmp)
-    return render(request, 'inventary/stock_mp/editar_stock_mp.html', {'form': form})
+    
+    context = {
+        'form': form,
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request, 'inventary/stock_mp/editar_stock_mp.html', context)
 
 def agregar_stock_mp(request):
     if request.method == 'POST':
@@ -359,11 +566,19 @@ def agregar_stock_mp(request):
 ##################################### METODOS STOCK PRODUCTOS #####################################
 @login_required(login_url='login')
 def crud_stock_prod(request):
+
     stockprods = StockProducto.objects.all()
-    return render(request, 'inventary/stock_producto/crud_stock_prod.html', {'stockprods': stockprods}) 
+
+    context = {
+        'stockprods': stockprods,
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request, 'inventary/stock_producto/crud_stock_prod.html', context) 
 
 @login_required(login_url='login')
 def ingresar_stock_prod(request):
+
     if request.method == 'POST':
         form = StockProductoForm(request.POST)
         if form.is_valid():
@@ -371,10 +586,17 @@ def ingresar_stock_prod(request):
             return redirect('/crud_stock_prod')  
     else:
         form = StockProductoForm()
-    return render(request, 'inventary/stock_producto/ingresar_stock_prod.html', {'form': form})
+
+    context = {
+        'form': form,
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request, 'inventary/stock_producto/ingresar_stock_prod.html', context)
 
 @login_required(login_url='login')
 def editar_stock_prod(request, stock_producto_id):
+
     stockprod = get_object_or_404(StockProducto, stock_producto_id=stock_producto_id)
     if request.method == 'POST':
         form = StockProductoForm(request.POST, instance=stockprod)
@@ -383,14 +605,19 @@ def editar_stock_prod(request, stock_producto_id):
             return redirect('/crud_stock_prod')  
     else:
         form = StockProductoForm(instance=stockprod)
-    return render(request, 'inventary/stock_producto/editar_stock_prod.html', {'form': form})
+    
+    context = {
+        'form': form,
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request, 'inventary/stock_producto/editar_stock_prod.html', context)
 
 ##################################### METODOS STOCK INSUMO #####################################
 @permission_required('inventario.can_access_crud_stock_insumo', raise_exception=True)
 @login_required(login_url='login')
 def crud_stock_insumo(request):
     context = {
-        'username': request.user.username,
         'grupo': request.user.groups.first(),
         'stockinsus': StockInsumo.objects.all()
     }
@@ -398,6 +625,7 @@ def crud_stock_insumo(request):
 
 @login_required(login_url='login')
 def ingresar_stock_insumo(request):
+
     if request.method == 'POST':
         form = StockInsumoForm(request.POST)
         if form.is_valid():
@@ -405,10 +633,17 @@ def ingresar_stock_insumo(request):
             return redirect('/crud_stock_insumo') 
     else:
         form = StockInsumoForm()
-    return render(request, 'inventary/stock_insumo/ingresar_stock_insumo.html', {'form': form})
+    
+    context = {
+        'form': form,
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request, 'inventary/stock_insumo/ingresar_stock_insumo.html', context)
 
 @login_required(login_url='login')
 def editar_stock_insumo(request, stock_in_id):
+
     stockinsu = get_object_or_404(StockInsumo, stock_in_id=stock_in_id)
     if request.method == 'POST':
         form = StockInsumoForm(request.POST, instance=stockinsu)
@@ -417,7 +652,13 @@ def editar_stock_insumo(request, stock_in_id):
             return redirect('/crud_stock_insumo')  
     else:
         form = StockInsumoForm(instance=stockinsu)
-    return render(request, 'inventary/stock_insumo/editar_stock_insumo.html', {'form': form})
+
+    context = {
+        'form': form,
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request, 'inventary/stock_insumo/editar_stock_insumo.html', context)
 
 def agregar_stock_insumo(request):
     if request.method == 'POST':
@@ -442,7 +683,10 @@ def agregar_stock_insumo(request):
 @login_required(login_url='login')
 @permission_required('inventario.can_access_crud_orden_prod', raise_exception=True)
 def cruds(request):
-    return render(request, 'cruds.html')
+    context = {
+        'grupo': request.user.groups.first()
+    }
+    return render(request, 'cruds.html', context)
 
 ########################################## METODOS ORDEN PRODUCCION ################################################
 
@@ -450,11 +694,25 @@ def cruds(request):
 @permission_required('inventario.can_access_crud_orden_prod', raise_exception=True)
 def crud_orden_prod(request):
     
-    odps = LoteProd.objects.all()
-    return render(request,'ventanas_prod/orden_prod/crud_orden_prod.html',{'odps': odps}) 
+    sort_by = request.GET.get('sort_by', 'lote_prod_id')
+    direction = request.GET.get('direction', 'asc')
+
+    if direction == 'desc':
+        sort_by = '-' + sort_by   
+    odps = LoteProd.objects.all().order_by(sort_by)
+
+    context = {
+        'odps': odps,
+        'sort_by': sort_by.strip('-'), 
+        'direction': direction,
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request,'ventanas_prod/orden_prod/crud_orden_prod.html', context) 
 
 @login_required(login_url='login')
 def ingresar_orden_prod(request):
+
     if request.method == 'POST':
         form = OdpForm(request.POST)
         if form.is_valid():
@@ -462,7 +720,13 @@ def ingresar_orden_prod(request):
             return redirect('/crud_orden_prod') 
     else:
         form = OdpForm()
-    return render(request, 'ventanas_prod/orden_prod/ingresar_orden_prod.html', {'form': form})
+    
+    context = {
+        'form': form,
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request, 'ventanas_prod/orden_prod/ingresar_orden_prod.html', context)
 
 @login_required(login_url='login')
 def editar_orden_prod(request, lote_prod_id):
@@ -474,23 +738,50 @@ def editar_orden_prod(request, lote_prod_id):
             return redirect('/crud_orden_prod')  
     else:
         form = OdpForm(instance=odp)
-    return render(request, 'ventanas_prod/orden_prod/editar_orden_prod.html', {'form': form})
+    
+    context = {
+        'form': form,
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request, 'ventanas_prod/orden_prod/editar_orden_prod.html', context)
 
 @login_required(login_url='login')
 def eliminar_orden_prod(request, lote_prod_id):
+
     odp = get_object_or_404(LoteProd, lote_prod_id=lote_prod_id)
     if request.method == 'POST':
         odp.delete()
         return redirect('/crud_orden_prod')
-    return render(request, 'ventanas_prod/orden_prod/eliminar_orden_prod.html', {'odp': odp})
+
+    context = {
+        'odp': odp,
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request, 'ventanas_prod/orden_prod/eliminar_orden_prod.html', context)
 ########################################## METODOS CALIDAD ################################################
 
 @login_required(login_url='login')
 @permission_required('inventario.can_access_crud_calidad', raise_exception=True)
 def crud_calidad(request):
-    odps = LoteProd.objects.all()
 
-    return render(request,'ventanas_prod/analisis_calidad/crud_calidad.html',{'odps': odps}) 
+    sort_by = request.GET.get('sort_by', 'lote_prod_id')
+    direction = request.GET.get('direction', 'asc')
+
+    if direction == 'desc':
+        sort_by = '-' + sort_by
+
+    odps = LoteProd.objects.all().order_by(sort_by)
+    
+    context = {
+        'odps': odps,
+        'sort_by': sort_by.strip('-'),
+        'direction': direction,
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request,'ventanas_prod/analisis_calidad/crud_calidad.html', context) 
 
 @login_required(login_url='login')
 def editar_calidad(request, lote_prod_id):
@@ -502,7 +793,13 @@ def editar_calidad(request, lote_prod_id):
             return redirect('/crud_calidad')
     else:
         form = CalidadForm(instance=odp)
-    return render(request, 'ventanas_prod/analisis_calidad/editar_calidad.html', {'form': form})
+    
+    context = {
+        'form': form,
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request, 'ventanas_prod/analisis_calidad/editar_calidad.html', context)
 
 @login_required(login_url='login')
 def confirmar_prod_calidad(request, lote_prod_id):
@@ -522,20 +819,57 @@ def confirmar_prod_calidad(request, lote_prod_id):
 @login_required(login_url='login')
 @permission_required('inventario.can_access_crud_despacho', raise_exception=True)
 def crud_inv_bodega(request):
+
     desps = Despacho.objects.all()
-    return render(request, 'ventanas_prod/inventario_bodega/crud_inv_bodega.html',{'desps': desps})
+
+    context = {
+        'desps': desps,
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request, 'ventanas_prod/inventario_bodega/crud_inv_bodega.html', context)
 
 ########################################## METODOS DESPACHO #########################################################
 @login_required(login_url='login')
 @permission_required('inventario.can_access_crud_despacho', raise_exception=True)
 def crud_despacho(request):
-    desps = Despacho.objects.all()        
-    return render(request, 'ventanas_prod/despacho_bodega/crud_despacho.html', {'desps': desps}) 
+
+    sort_by = request.GET.get('sort_by', 'despacho_id')
+    direction = request.GET.get('direction', 'asc')
+    
+    if direction == 'desc':
+        sort_by = '-' + sort_by
+
+    desps = Despacho.objects.all().order_by(sort_by)
+    
+    context = {
+        'desps': desps,      
+        'sort_by': sort_by.strip('-'),
+        'direction': direction,        
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request, 'ventanas_prod/despacho_bodega/crud_despacho.html', context) 
 
 @login_required(login_url='login')
 def crud_lote_desp(request):
-    odps = LoteProd.objects.all()
-    return render(request, 'ventanas_prod/despacho_bodega/crud_lote_desp.html', {'odps': odps})
+
+    sort_by = request.GET.get('sort_by', 'lote_prod_id')
+    direction = request.GET.get('direction', 'asc')
+
+    if direction == 'desc':
+        sort_by = '-' + sort_by
+
+    odps = LoteProd.objects.all().order_by(sort_by)    
+
+    context = {
+        'odps': odps,
+        'sort_by': sort_by.strip('-'), 
+        'direction': direction,
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request, 'ventanas_prod/despacho_bodega/crud_lote_desp.html', context)
 
 @login_required(login_url='login')
 def ingresar_despacho(request):
@@ -571,8 +905,23 @@ def confirmar_despacho(request, despacho_id):
 @login_required(login_url='login')
 @permission_required('inventario.can_access_crud_guias_despacho', raise_exception=True)
 def crud_guia_despacho(request):
-    desps = Despacho.objects.all()
-    return render(request, 'ventanas_prod/guias_despacho/crud_guia_despacho.html', {'desps': desps})
+
+    sort_by = request.GET.get('sort_by', 'despacho_id')
+    direction = request.GET.get('direction', 'asc')
+    
+    if direction == 'desc':
+        sort_by = '-' + sort_by
+
+    desps = Despacho.objects.all().order_by(sort_by)
+    
+    context = {
+        'desps': desps,      
+        'sort_by': sort_by.strip('-'),
+        'direction': direction,        
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request, 'ventanas_prod/guias_despacho/crud_guia_despacho.html', context)
 
 @login_required(login_url='login')
 def editar_guia_despacho(request, despacho_id):
@@ -590,15 +939,37 @@ def editar_guia_despacho(request, despacho_id):
             
     else:
         form = GuiaDespachoForm(instance=desp)
-    return render(request, 'ventanas_prod/guias_despacho/editar_guia_despacho.html', {'form': form})
+    
+    context = {
+        'form': form,
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request, 'ventanas_prod/guias_despacho/editar_guia_despacho.html', context)
 
 
 ########################################## METODOS REPORTE DIARIO ################################################
 @login_required(login_url='login')
 @permission_required('inventario.can_access_crud_despacho', raise_exception=True)
 def crud_reporte(request):
-    desps = Despacho.objects.all()
-    return render(request, 'ventanas_prod/reporte/crud_reporte.html',{'desps': desps})
+
+    sort_by = request.GET.get('sort_by', 'fecha_despacho')
+    direction = request.GET.get('direction', 'asc')
+    
+    if direction == 'desc':
+        sort_by = '-' + sort_by
+    
+    despachos = Despacho.objects.all().order_by(sort_by)
+    
+    context = {
+        'desps': despachos,
+        'sort_by': sort_by.strip('-'),
+        'direction': direction,
+        'grupo': request.user.groups.first()
+    }
+
+
+    return render(request, 'ventanas_prod/reporte/crud_reporte.html', context)
 
 
 ########################################## METODOS CERTIFICADO ######################################################
