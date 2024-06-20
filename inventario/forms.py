@@ -1,11 +1,23 @@
 #"""
 from django import forms
 from .models import InfoAditivo, Producto, CompProducto, StockAditivo, Insumo, ProdCopec, StockInsumo, StockProducto, LoteProd, User, Despacho
+from django.contrib.auth.models import User, Group
+
 
 class UserForm(forms.ModelForm):
+    groups = forms.ModelChoiceField(queryset=Group.objects.all(), required=True)
+    
     class Meta:
         model = User
         fields = ['username', 'email','first_name', 'last_name']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password'])
+        if commit:
+            user.save()
+            user.groups.set([self.cleaned_data['groups']])
+        return user
 
 class InsumoForm(forms.ModelForm):
     class Meta:
