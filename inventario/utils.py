@@ -111,14 +111,15 @@ def generar_despacho(lote_prod_id, cantidad):
 ##############################################################################################################
 
 def aumentar_stock_mp(stock_ad_id, cantidad):
-    try:        
-        # Obtener el lote de producción
-        stockmp = StockAditivo.objects.select_for_update().get(stock_ad_id=stock_ad_id)   
-        
-        stockmp.stock_ad_cant_lt = stockmp.stock_ad_cant_lt + cantidad
-        stockmp.save()
+    try:
+        with transaction.atomic():        
+            # Obtener el lote de producción
+            stockmp = StockAditivo.objects.select_for_update().get(stock_ad_id=stock_ad_id)   
+            
+            stockmp.stock_ad_cant_lt = stockmp.stock_ad_cant_lt + cantidad
+            stockmp.save()
 
-        return stockmp
+            return stockmp
 
     except LoteProd.DoesNotExist:
         raise ValueError(f"Stock con ID {stock_ad_id} no encontrado")
@@ -138,15 +139,16 @@ def aumentar_stock_mp(stock_ad_id, cantidad):
 ##############################################################################################################
 
 def aumentar_stock_insumo(stock_in_id, cantidad):
-    try:        
-        # Obtener el lote de producción
-        stockinsu = StockInsumo.objects.select_for_update().get(stock_in_id=stock_in_id)
+    try:
+        with transaction.atomic():         
+            # Obtener el lote de producción
+            stockinsu = StockInsumo.objects.select_for_update().get(stock_in_id=stock_in_id)
 
-        # Actualizar la cantidad del lote de producción
-        stockinsu.stock_in_cant_unit = stockinsu.stock_in_cant_unit + cantidad
-        stockinsu.save()
+            # Actualizar la cantidad del lote de producción
+            stockinsu.stock_in_cant_unit = stockinsu.stock_in_cant_unit + cantidad
+            stockinsu.save()
 
-        return stockinsu
+            return stockinsu
 
     except LoteProd.DoesNotExist:
         raise ValueError(f"Stock con ID {stock_in_id} no encontrado")
@@ -156,15 +158,16 @@ def aumentar_stock_insumo(stock_in_id, cantidad):
 ##############################################################################################################
 
 def actualizar_despacho(despacho_id):
-    try:        
-        # Obtener el lote de producción
-        despacho = Despacho.objects.select_for_update().get(despacho_id=despacho_id)
+    try:
+        with transaction.atomic():         
+            # Obtener el lote de producción
+            despacho = Despacho.objects.select_for_update().get(despacho_id=despacho_id)
 
-        # Actualizar el estado del despacho
-        despacho.tipo_despacho = 'LISTO PARA DESPACHO'
-        despacho.save()
+            # Actualizar el estado del despacho
+            despacho.tipo_despacho = 'LISTO PARA DESPACHO'
+            despacho.save()
 
-        return despacho
+            return despacho
 
     except Despacho.DoesNotExist:
         raise ValueError(f"Stock con ID {despacho_id} no encontrado")
@@ -175,15 +178,16 @@ def actualizar_despacho(despacho_id):
 ##############################################################################################################
 
 def despachar(despacho_id):
-    try:        
-        # Obtener el lote de producción
-        despacho = Despacho.objects.select_for_update().get(despacho_id=despacho_id)
+    try:
+        with transaction.atomic():        
+            # Obtener el lote de producción
+            despacho = Despacho.objects.select_for_update().get(despacho_id=despacho_id)
 
-        # Actualizar el estado del despacho
-        despacho.tipo_despacho = 'DESPACHADO'
-        despacho.save()
+            # Actualizar el estado del despacho
+            despacho.tipo_despacho = 'DESPACHADO'
+            despacho.save()
 
-        return despacho
+            return despacho
 
     except Despacho.DoesNotExist:
         raise ValueError(f"Stock con ID {despacho_id} no encontrado")

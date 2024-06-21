@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from .utils import link_callback, agregar_stock, generar_despacho, aumentar_stock_mp, aumentar_stock_insumo, actualizar_despacho, despachar
 from django.http import HttpResponseForbidden
 from decimal import Decimal
-from django.template.loader import render_to_string
+from django.template.loader import render_to_string, get_template
 from xhtml2pdf import pisa
 
 
@@ -979,6 +979,33 @@ def gen_certificado(request, lote_prod_id):
     # Obtener el objeto correspondiente al lote_prod_id
     odp = get_object_or_404(LoteProd, lote_prod_id=lote_prod_id)
     
+    template_path = 'ventanas_prod/orden_prod/gen_certificado.html'
+
+    context = {'odp': odp}
+
+    # Crear una respuesta HTTP con el tipo de contenido PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="certificado_{lote_prod_id}.pdf"'
+    
+    template = get_template(template_path)
+    html = template.render(context)
+    
+    # Convertir el HTML a PDF usando xhtml2pdf
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    # Verificar si hubo algún error
+    if pisa_status.err:
+        return HttpResponse('Ocurrió un error al generar el PDF', status=500)
+        
+    return response
+
+"""
+
+@login_required(login_url='login')
+def gen_certificado(request, lote_prod_id):
+    # Obtener el objeto correspondiente al lote_prod_id
+    odp = get_object_or_404(LoteProd, lote_prod_id=lote_prod_id)
+    
     # Renderizar el HTML a una cadena
     html = render_to_string('ventanas_prod/orden_prod/gen_certificado.html', {'odp': odp})
 
@@ -994,8 +1021,6 @@ def gen_certificado(request, lote_prod_id):
         return HttpResponse('Ocurrió un error al generar el PDF', status=500)
         
     return response
-
-"""
 
 
 """

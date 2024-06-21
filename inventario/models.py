@@ -35,10 +35,10 @@ class CompProducto(models.Model):
     comp_producto_id = models.AutoField(primary_key=True)
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     info_aditivo = models.ForeignKey(InfoAditivo, on_delete=models.CASCADE)
-    pp = models.DecimalField(max_digits=5, decimal_places=5)
+    pp = models.DecimalField(max_digits=6, decimal_places=5)
     vv = models.DecimalField(max_digits=6, decimal_places=5, default=1.00000)
     def __str__(self):
-        return self.producto
+        return self.producto.producto_nom
 
 class ProdCopec(models.Model):
     prod_copec_id = models.AutoField(primary_key=True)
@@ -100,8 +100,8 @@ class LoteProd(models.Model):
     apariencia = models.CharField(max_length=5, default = 'N/A', null=False)
     sellos_tapas = models.CharField(max_length=5, default = 'N/A', null=False)
     valvulas = models.CharField(max_length=5, default = 'N/A', null=False)
-    estado_aceptado = models.CharField(max_length=10, default = '-', null=False)
-    estado_produccion = models.CharField(max_length=10, default='PENDIENTE', null=False)    
+    estado_aceptado = models.CharField(max_length=100, default = 'N/A', null=False)
+    estado_produccion = models.CharField(max_length=100, default='PENDIENTE', null=False)    
     patente = models.CharField(max_length=5, default = 'N/A', null=False)
     cliente = models.CharField(max_length=50, default = 'COPEC', null=False)
 
