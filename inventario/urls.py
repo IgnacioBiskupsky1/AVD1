@@ -97,6 +97,7 @@ urlpatterns = [
     path('editar_guia_despacho/<int:despacho_id>/',views.editar_guia_despacho, name='editar_guia_despacho'),
 
     path('crud_reporte/', views.crud_reporte, name='crud_reporte'),
+    path('eliminar_reporte/<int:despacho_id>/',views.eliminar_reporte, name='eliminar_reporte'),
     
     ]
 

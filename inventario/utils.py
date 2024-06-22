@@ -35,6 +35,7 @@ def agregar_stock(prod_copec_id, valor_total, lote_prod_id):
         insumo = prod_copec.insumo
         lote = LoteProd.objects.get(lote_prod_id=lote_prod_id)
 
+        
         """
         stock_producto, created = StockProducto.objects.get_or_create(
             prod_copec=prod_copec,
@@ -58,12 +59,13 @@ def agregar_stock(prod_copec_id, valor_total, lote_prod_id):
             stock_aditivo.stock_ad_cant_lt -= cantidad_a_descontar
             stock_aditivo.save()
 
-        cantidad_a_descontar_insumo = math.trunc(Decimal(valor_total) / insumo.insumo_vol)
-        stock_insumo = StockInsumo.objects.get(insumo=insumo)
-        if stock_insumo.stock_in_cant_unit < cantidad_a_descontar_insumo:
-            raise ValueError(f"No hay suficiente stock del insumo {insumo.insumo_nom}")
-        stock_insumo.stock_in_cant_unit -= cantidad_a_descontar_insumo
-        stock_insumo.save()
+        if insumo.insumo_nom != 'GRANEL':
+            cantidad_a_descontar_insumo = math.trunc(Decimal(valor_total) / insumo.insumo_vol)
+            stock_insumo = StockInsumo.objects.get(insumo=insumo)
+            if stock_insumo.stock_in_cant_unit < cantidad_a_descontar_insumo:
+                raise ValueError(f"No hay suficiente stock del insumo {insumo.insumo_nom}")
+            stock_insumo.stock_in_cant_unit -= cantidad_a_descontar_insumo
+            stock_insumo.save()
 
         lote.volumen_prod += valor_total
         lote.cant_prod += math.trunc(Decimal(valor_total) / insumo.insumo_vol)

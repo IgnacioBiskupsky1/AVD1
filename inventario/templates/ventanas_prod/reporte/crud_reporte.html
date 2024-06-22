@@ -41,6 +41,7 @@
                         <th scope="col">Nombre Producto</th>
                         <th scope="col">Lote</th>
                         <th scope="col">Guia de Despacho</th>
+                        <th scope="col">Emergencia</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,6 +56,9 @@
                             <td>{{ desp.lote.prod_copec.producto }}</td>
                             <td>{{ desp.lote.lote_prod_id }}</td>
                             <td>{{ desp.guia_despacho }}</td>
+                            <td>
+                                <a name="" id="" class="btn btn-danger" href="/eliminar_reporte/{{ desp.despacho_id }}" role="button">Eliminar</a>
+                            </td>
                         {% endif %}
                     </tr>                    
                     {% endfor %}

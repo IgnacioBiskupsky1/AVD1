@@ -11,9 +11,9 @@ from auditlog.registry import auditlog
 class Insumo(models.Model):
     insumo_id = models.AutoField(primary_key=True)
     insumo_nom = models.CharField(max_length=60, blank=True, null=True)    
-    insumo_vol = models.DecimalField(max_digits=3, decimal_places=1)
-    insumo_env_por_caja = models.DecimalField(max_digits=3, decimal_places=1)
-    insumo_cajas_por_pallet = models.DecimalField(max_digits=3, decimal_places=1)
+    insumo_vol = models.DecimalField(max_digits=6, decimal_places=1)
+    insumo_env_por_caja = models.DecimalField(max_digits=5, decimal_places=1)
+    insumo_cajas_por_pallet = models.DecimalField(max_digits=5, decimal_places=1)
     insumo_desc = models.CharField(max_length=150, blank=True, null=True)
     def __str__(self):
         return self.insumo_nom
@@ -27,7 +27,7 @@ class InfoAditivo(models.Model):
 
 class Producto(models.Model):
     producto_id = models.AutoField(primary_key=True)
-    producto_nom = models.CharField(max_length=50)
+    producto_nom = models.CharField(max_length=50, unique=True)
     def __str__(self):
         return self.producto_nom
 
@@ -83,26 +83,26 @@ class LoteProd(models.Model):
     cant_prod = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
     tk_agua = models.CharField(max_length=5, default = 'N/A', null=False)
     tk_prod = models.CharField(max_length=5, default = 'N/A', null=False)
-    lote_mp = models.CharField(max_length=5, default = 'N/A', null=False)
+    lote_mp = models.CharField(max_length=50, default = 'N/A', null=False)
     fecha_ven_mp = models.DateField(default=datetime.date.today)
-    lote_colorante = models.CharField(max_length=5, default = 'N/A', null=False)
+    lote_colorante = models.CharField(max_length=10, default = 'N/A', null=False)
     fecha_ven_colorante = models.DateField(default=datetime.date.today)
-    lote_aromatizante = models.CharField(max_length=5, default = 'N/A', null=False)
+    lote_aromatizante = models.CharField(max_length=10, default = 'N/A', null=False)
     fecha_ven_aromatizante = models.DateField(default=datetime.date.today)
-    num_pedido_asr = models.CharField(max_length=5, default = 'N/A', null=False)
-    lote_asr = models.CharField(max_length=5, default = 'N/A', null=False)
+    num_pedido = models.CharField(max_length=10, default = 'N/A', null=False)
+    lote_asr = models.CharField(max_length=10, default = 'N/A', null=False)
     fecha_ven_asr = models.DateField(default=datetime.date.today)
-    freezing_point = models.DecimalField(max_digits=4, decimal_places=2, default=0.00)
-    ph = models.DecimalField(max_digits=4, decimal_places=2, default=0.00)
-    glicol = models.DecimalField(max_digits=4, decimal_places=2, default=0.00)
+    freezing_point = models.CharField(max_length=6, default = 'N/A', null=False)
+    ph = models.CharField(max_length=6, default = 'N/A', null=False)
+    glicol = models.CharField(max_length=6, default = 'N/A', null=False)
     color = models.CharField(max_length=10, default = 'N/A', null=False)
     olor = models.CharField(max_length=10, default = 'N/A', null=False)
-    apariencia = models.CharField(max_length=5, default = 'N/A', null=False)
-    sellos_tapas = models.CharField(max_length=5, default = 'N/A', null=False)
-    valvulas = models.CharField(max_length=5, default = 'N/A', null=False)
+    apariencia = models.CharField(max_length=10, default = 'N/A', null=False)
+    sellos_tapas = models.CharField(max_length=10, default = 'N/A', null=False)
+    valvulas = models.CharField(max_length=10, default = 'N/A', null=False)
     estado_aceptado = models.CharField(max_length=100, default = 'N/A', null=False)
     estado_produccion = models.CharField(max_length=100, default='PENDIENTE', null=False)    
-    patente = models.CharField(max_length=5, default = 'N/A', null=False)
+    patente = models.CharField(max_length=8, default = 'N/A', null=False)
     cliente = models.CharField(max_length=50, default = 'COPEC', null=False)
 
     class Meta:

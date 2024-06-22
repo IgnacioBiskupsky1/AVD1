@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from .utils import link_callback, agregar_stock, generar_despacho, aumentar_stock_mp, aumentar_stock_insumo, actualizar_despacho, despachar
 from django.http import HttpResponseForbidden
 from decimal import Decimal
-from django.template.loader import render_to_string, get_template
+from django.template.loader import get_template
 from xhtml2pdf import pisa
 
 
@@ -970,6 +970,20 @@ def crud_reporte(request):
 
 
     return render(request, 'ventanas_prod/reporte/crud_reporte.html', context)
+
+def eliminar_reporte(request, despacho_id):
+    
+    desp = get_object_or_404(Despacho, despacho_id=despacho_id)
+    if request.method == 'POST':
+        desp.delete()
+        return redirect('/crud_reporte')
+
+    context = {
+        'desp': desp,
+        'grupo': request.user.groups.first()
+    }
+
+    return render(request, 'ventanas_prod/reporte/eliminar_reporte.html', context)
 
 
 ########################################## METODOS CERTIFICADO ######################################################

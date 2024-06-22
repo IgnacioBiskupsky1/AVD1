@@ -5,24 +5,93 @@
         <title> </title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
-        <!--
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        -->
+        
+        <style type="text/css">    
+            body {
+              background-color: white;
+              font-family: "Roboto", sans-serif;
+            }
+    
+            .right{
+                font-size: 10px;
+                text-align: right;
+    
+            }
+            .left{
+                text-align: left;
+            }
+    
+            .invoice-number {
+                font-size: 18px;
+                font-family: "Roboto-bold", sans-serif;
+            }
+    
+            .col-titles {
+                font-size: 16px;
+                text-decoration: underline;
+                font-family: "Roboto-bold", sans-serif;
+             }
+    
+             .footer {
+                font-size: 8px;
+                text-align: center;
+             }
+    
+             p{
+                font-size: 10px;
+                line-height: 0;
+             }
+    
+             table {
+                border: 1px solid #000;
+                border-bottom: 1px solid #000;
+                text-align: center;
+                width: 25%;
+                border-collapse: collapse;
+            }
+    
+            td, td {
+                border-bottom: 1px solid #000;
+                vertical-align: middle;
+            }
+    
+            .summary{
+                 border-bottom: 1px solid #ddd;
+            }
+    
+            .signatures {
+                border-top: 1px solid black;
+                font-size: 8px;
+                text-align: center;
+            }
+    
+             th {
+                height: 36px;
+    
+             }
+             td {
+                height: 25px;
+                text-align: center;
+             }
+    
+        </style>
     </head>
 
     </head>
 
-    <body>        
+    <body>
+        <a><img src="https://valledoradosa.cl/wp-content/uploads/2024/02/valle-dorado-logo-web-mobil-2.png" width="500" height="100" alt=""></a>       
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 text-center" style="float:none;margin:auto;">
-                    <h4 style="font-weight: bold;" >
+                    <h4 style="font-weight: bold; text-align: center; font-size: 20px;" >
                         CERTIFICADO N°{{ odp.lote_prod_id }}
                     </h4>
-                    <h6>
+                    <h6 style="text-align: left; font-size: 12px;">
                         {{ odp.lote_prod_fecha }}
-                        <br><br>
+                    </h6>
+                    <h6>
+                        <br>
                         Certificamos que el producto identificado a continuación tiene las características que se detallan:
                     </h6>
 
@@ -30,41 +99,40 @@
                         <div class="card-body">
                             <h5 class="card-title"></h5>
                     
-                            <div class="table-responsive-sm">
-                                <table class="table table-info table-sm table-bordered align-middle">
-                                    <thead></thead>
+                            <div class="table">
+                                <table class="table">
                                     <tbody>
                                         <tr>
-                                            <th scope="row">Producto</th>
+                                            <th scope="row" style="background-color: green;">Producto</th>
                                             <td scope="col">{{ odp.prod_copec.producto }}</td>
                                         </tr>
                                         <tr>
-                                            <th scope="col">Batch</th>
+                                            <th scope="col" style="background-color: green;">Batch</th>
                                             <td>{{ odp.lote_prod_id }}</td>
                                         </tr>
                                         <tr> 
-                                            <th scope="col">Fecha de Elaboracion</th>
+                                            <th scope="col" style="background-color: green;">Fecha de Elaboracion</th>
                                             <td>{{ odp.lote_prod_fecha }}</td> 
                                         </tr>    
                                         <tr>
-                                            <th scope="col">Cliente</th>
+                                            <th scope="col" style="background-color: green;">Cliente</th>
                                             <td>{{ odp.cliente }}</td> 
                                         </tr>  
                                         <tr>
-                                            <th scope="col">N° Pedido</th>
-                                            <td>{{ odp.prod_copec.insumo }}</td>
+                                            <th scope="col" style="background-color: green;">N° Pedido</th>
+                                            <td>{{ odp.num_pedido }}</td>
                                         </tr>    
                                         <tr>
-                                            <th scope="col">N° Lotes</th> 
-                                            <td>{{ odp.estado_produccion }}</td>
+                                            <th scope="col" style="background-color: green;">N° Lotes</th> 
+                                            <td>{{ odp.lote_mp }}</td>
                                         </tr>
                                         <tr>
-                                            <th scope="col">Asr</th>
-                                            <td>{{ odp.prod_copec.insumo }}</td>
+                                            <th scope="col" style="background-color: green;">Asr</th>
+                                            <td>{{ odp.lote_asr }}</td>
                                         </tr>    
                                         <tr>
-                                            <th scope="col">Formato</th> 
-                                            <td>{{ odp.estado_produccion }}</td>
+                                            <th scope="col" style="background-color: green;">Formato</th> 
+                                            <td>{{ odp.prod_copec.insumo }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -79,31 +147,30 @@
                             <h5 class="card-title"></h5>
                     
                             <div class="table-responsive-sm">
-                                <table class="table table-info table-sm table-bordered align-middle">
-                                    <thead></thead>
+                                <table class="table">
                                     <tbody>
                                         <tr>
-                                            <th scope="row">% Glicol</th>
+                                            <th scope="row" style="background-color: green;">% Glicol</th>
                                             <td scope="col">{{ odp.glicol }}</td>
                                         </tr>
                                         <tr>
-                                            <th scope="col">Color</th>
+                                            <th scope="col" style="background-color: green;">Color</th>
                                             <td>{{ odp.color }}</td>
                                         </tr>
                                         <tr> 
-                                            <th scope="col">Olor</th>
+                                            <th scope="col" style="background-color: green;">Olor</th>
                                             <td>{{ odp.olor }}</td> 
                                         </tr>    
                                         <tr>
-                                            <th scope="col">Apariencia</th>
+                                            <th scope="col" style="background-color: green;">Apariencia</th>
                                             <td>{{ odp.apariencia }}</td> 
                                         </tr>  
                                         <tr>
-                                            <th scope="col">pH</th>
+                                            <th scope="col" style="background-color: green;">pH</th>
                                             <td>{{ odp.ph }}</td>
                                         </tr>    
                                         <tr>
-                                            <th scope="col">Freezing Point</th> 
+                                            <th scope="col" style="background-color: green;">Freezing Point</th> 
                                             <td>{{ odp.freezing_point }}</td>
                                         </tr>  
                                             
@@ -115,10 +182,10 @@
                     <br><br><br>
                     <h6>Atentamente</h6>
                     <br>
-                    <h6>"Aquí va la foto de la Firma del Marcelo</h6>
+                    <h6> </h6>
                     <br>
                     <h5>_________________________________</h5>
-                    <h6>Jefe Producción</h6>
+                    <h6>             Jefe Producción</h6>
                 </div>
             </div>
         </div>
