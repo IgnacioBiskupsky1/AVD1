@@ -20,7 +20,6 @@
                         <th scope="col">Email</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Apellido</th>
-                        <th scope="col">Admin</th>
                         <th scope="col">Grupo</th>
                         <th scope="col">Acciones</th>
                     </tr>
@@ -31,9 +30,8 @@
                         <td scope="row">{{ user.pk }}</td>                   
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
-                        <td>{{ user.nombres }}</td>
-                        <td>{{ user.apellidos }}</td>
-                        <td>{{ user.usuario_administrador }}</td>
+                        <td>{{ user.first_name }}</td>
+                        <td>{{ user.last_name }}</td>
                         <td>{{ user.groups.first }}</td>                        
                         <td>
                             <a name="" id="" class="btn btn-info" href="/editar_usuario/{{ user.pk }}/" role="button">Editar</a> | 

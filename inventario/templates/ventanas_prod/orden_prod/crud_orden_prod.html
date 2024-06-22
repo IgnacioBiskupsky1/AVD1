@@ -54,7 +54,7 @@
                             <a name="" id="" class="btn btn-danger" href="/eliminar_orden_prod/{{ odp.lote_prod_id }}" role="button">Eliminar</a>
                         </td>
                         <td>
-                            {% if odp.estado_produccion == "DESPACHADO" %}
+                            {% if odp.estado_produccion == "DESPACHADO" or odp.estado_produccion == "DISPONIBLE PARA DESPACHO" %}
                                 <a name="" id="" class="btn btn-info" href="/gen_certificado/{{ odp.lote_prod_id }}" role="button">Certificado</a>
                             {% endif %}
                         </td>

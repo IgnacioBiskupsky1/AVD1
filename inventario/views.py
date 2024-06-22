@@ -12,6 +12,7 @@ from django.http import HttpResponseForbidden
 from decimal import Decimal
 from django.template.loader import get_template
 from xhtml2pdf import pisa
+import datetime
 
 
 # Create your views here.
@@ -992,10 +993,10 @@ def eliminar_reporte(request, despacho_id):
 def gen_certificado(request, lote_prod_id):
     # Obtener el objeto correspondiente al lote_prod_id
     odp = get_object_or_404(LoteProd, lote_prod_id=lote_prod_id)
-    
+    fecha = datetime.date.today()
     template_path = 'ventanas_prod/orden_prod/gen_certificado.html'
 
-    context = {'odp': odp}
+    context = {'odp': odp, 'fecha': fecha}
 
     # Crear una respuesta HTTP con el tipo de contenido PDF
     response = HttpResponse(content_type='application/pdf')

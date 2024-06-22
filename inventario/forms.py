@@ -6,10 +6,14 @@ from django.contrib.auth.models import User, Group
 
 class UserForm(forms.ModelForm):
     groups = forms.ModelChoiceField(queryset=Group.objects.all(), required=True)
+    password = forms.CharField(widget=forms.PasswordInput())
     
     class Meta:
         model = User
-        fields = ['username', 'email','first_name', 'last_name']
+        widgets = {
+            'password': forms.PasswordInput(),
+        }
+        fields = ['username','password','email','first_name', 'last_name']
 
     def save(self, commit=True):
         user = super().save(commit=False)

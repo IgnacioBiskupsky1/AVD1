@@ -87,10 +87,10 @@
                     <h4 style="font-weight: bold; text-align: center; font-size: 20px;" >
                         CERTIFICADO N°{{ odp.lote_prod_id }}
                     </h4>
-                    <h6 style="text-align: left; font-size: 12px;">
-                        {{ odp.lote_prod_fecha }}
+                    <h6 style="text-align: left; font-size: 16px;">
+                        {{ fecha }}
                     </h6>
-                    <h6>
+                    <h6 style="text-align: left; font-size: 13px;">
                         <br>
                         Certificamos que el producto identificado a continuación tiene las características que se detallan:
                     </h6>
@@ -103,36 +103,36 @@
                                 <table class="table">
                                     <tbody>
                                         <tr>
-                                            <th scope="row" style="background-color: green;">Producto</th>
-                                            <td scope="col">{{ odp.prod_copec.producto }}</td>
+                                            <th scope="row" style="background-color: green; font-size: 13px;">Producto</th>
+                                            <td scope="col" style="font-size: 13px;">{{ odp.prod_copec.producto }}</td>
                                         </tr>
                                         <tr>
-                                            <th scope="col" style="background-color: green;">Batch</th>
-                                            <td>{{ odp.lote_prod_id }}</td>
+                                            <th scope="col" style="background-color: green;font-size: 13px;">Batch</th>
+                                            <td style="font-size: 13px;">{{ odp.lote_prod_id }}</td>
                                         </tr>
                                         <tr> 
-                                            <th scope="col" style="background-color: green;">Fecha de Elaboracion</th>
-                                            <td>{{ odp.lote_prod_fecha }}</td> 
+                                            <th scope="col" style="background-color: green;font-size: 13px;">Fecha de Elaboracion</th>
+                                            <td style="font-size: 13px;">{{ odp.lote_prod_fecha }}</td> 
                                         </tr>    
                                         <tr>
-                                            <th scope="col" style="background-color: green;">Cliente</th>
-                                            <td>{{ odp.cliente }}</td> 
+                                            <th scope="col" style="background-color: green;font-size: 13px;">Cliente</th>
+                                            <td style="font-size: 13px;">{{ odp.cliente }}</td> 
                                         </tr>  
                                         <tr>
-                                            <th scope="col" style="background-color: green;">N° Pedido</th>
-                                            <td>{{ odp.num_pedido }}</td>
+                                            <th scope="col" style="background-color: green;font-size: 13px;">N° Pedido</th>
+                                            <td style="font-size: 13px;">{{ odp.num_pedido }}</td>
                                         </tr>    
                                         <tr>
-                                            <th scope="col" style="background-color: green;">N° Lotes</th> 
-                                            <td>{{ odp.lote_mp }}</td>
+                                            <th scope="col" style="background-color: green;font-size: 13px;">N° Lotes</th> 
+                                            <td style="font-size: 13px;">{{ odp.lote_mp }}</td>
                                         </tr>
                                         <tr>
-                                            <th scope="col" style="background-color: green;">Asr</th>
-                                            <td>{{ odp.lote_asr }}</td>
+                                            <th scope="col" style="background-color: green;font-size: 13px;">Asr</th>
+                                            <td style="font-size: 13px;">{{ odp.lote_asr }}</td>
                                         </tr>    
                                         <tr>
-                                            <th scope="col" style="background-color: green;">Formato</th> 
-                                            <td>{{ odp.prod_copec.insumo }}</td>
+                                            <th scope="col" style="background-color: green;font-size: 13px;">Formato</th> 
+                                            <td style="font-size: 13px;">{{ odp.prod_copec.insumo }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -140,7 +140,7 @@
                         </div>
                     </div>
                     <br><br>
-                    <h6>A continuacion encontraran las Caracteristicas medidas:</h6>
+                    <h6 style="font-size: 13px;">A continuacion encontraran las Caracteristicas medidas:</h6>
 
                     <div class="card text-center">
                         <div class="card-body">
@@ -150,42 +150,41 @@
                                 <table class="table">
                                     <tbody>
                                         <tr>
-                                            <th scope="row" style="background-color: green;">% Glicol</th>
-                                            <td scope="col">{{ odp.glicol }}</td>
+                                            <th scope="row" style="background-color: green;font-size: 13px;">% Glicol</th>
+                                            <td scope="col" style="font-size: 13px;">{{ odp.glicol }}</td>
                                         </tr>
                                         <tr>
-                                            <th scope="col" style="background-color: green;">Color</th>
-                                            <td>{{ odp.color }}</td>
+                                            <th scope="col" style="background-color: green;font-size: 13px;">Color</th>
+                                            <td style="font-size: 13px;">{{ odp.color }}</td>
                                         </tr>
                                         <tr> 
-                                            <th scope="col" style="background-color: green;">Olor</th>
-                                            <td>{{ odp.olor }}</td> 
+                                            <th scope="col" style="background-color: green;font-size: 13px;">Olor</th>
+                                            <td style="font-size: 13px;">{{ odp.olor }}</td> 
                                         </tr>    
                                         <tr>
-                                            <th scope="col" style="background-color: green;">Apariencia</th>
-                                            <td>{{ odp.apariencia }}</td> 
+                                            <th scope="col" style="background-color: green;font-size: 13px;">Apariencia</th>
+                                            <td style="font-size: 13px;">{{ odp.apariencia }}</td> 
                                         </tr>  
                                         <tr>
-                                            <th scope="col" style="background-color: green;">pH</th>
-                                            <td>{{ odp.ph }}</td>
+                                            <th scope="col" style="background-color: green;font-size: 13px;">pH</th>
+                                            <td style="font-size: 13px;">{{ odp.ph }}</td>
                                         </tr>    
                                         <tr>
-                                            <th scope="col" style="background-color: green;">Freezing Point</th> 
-                                            <td>{{ odp.freezing_point }}</td>
-                                        </tr>  
-                                            
+                                            <th scope="col" style="background-color: green;font-size: 13px;">Freezing Point</th> 
+                                            <td style="font-size: 13px;">{{ odp.freezing_point }}</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>                            
                         </div>
                     </div>
                     <br><br><br>
-                    <h6>Atentamente</h6>
+                    <h6 style="text-align: center;font-size: 13px;">Atentamente</h6>
                     <br>
                     <h6> </h6>
                     <br>
-                    <h5>_________________________________</h5>
-                    <h6>             Jefe Producción</h6>
+                    <h5 style="text-align: center;font-size: 13px;">_________________________________</h5>
+                    <h6 style="text-align: center;font-size: 13px;">Jefe Producción</h6>
                 </div>
             </div>
         </div>
