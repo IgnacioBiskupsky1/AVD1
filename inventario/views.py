@@ -135,7 +135,7 @@ def crud_mp(request):
             'grupo': request.user.groups.first()
         }
     
-    return render(request, 'inventary/materia_prima/crud_mp.html', context)
+    return render(request, 'inventario/materia_prima/crud_mp.html', context)
 
 @login_required(login_url='login')
 def ingresar_mp(request):
@@ -154,7 +154,7 @@ def ingresar_mp(request):
         'grupo': grupo
     }
     
-    return render(request, 'inventary/materia_prima/ingresar_mp.html', context)
+    return render(request, 'inventario/materia_prima/ingresar_mp.html', context)
 
 @login_required(login_url='login')
 def editar_mp(request, adtv_id):
@@ -174,7 +174,7 @@ def editar_mp(request, adtv_id):
         'grupo': grupo
     }
 
-    return render(request, 'inventary/materia_prima/editar_mp.html', context)
+    return render(request, 'inventario/materia_prima/editar_mp.html', context)
 
 @login_required(login_url='login')
 def eliminar_mp(request, adtv_id):
@@ -190,7 +190,7 @@ def eliminar_mp(request, adtv_id):
         'grupo': grupo
     }
 
-    return render(request, 'inventary/materia_prima/eliminar_mp.html', context)
+    return render(request, 'inventario/materia_prima/eliminar_mp.html', context)
 
 ##################################### METODOS INSUMO #####################################
 @login_required(login_url='login')
@@ -213,7 +213,7 @@ def crud_insu(request):
         'grupo': grupo
     }
 
-    return render(request, 'inventary/insumos/crud_insu.html', context) 
+    return render(request, 'inventario/insumos/crud_insu.html', context) 
 
 
 @login_required(login_url='login')
@@ -234,7 +234,7 @@ def ingresar_in(request):
         'grupo': grupo
     }
 
-    return render(request, 'inventary/insumos/ingresar_insumo.html', context)
+    return render(request, 'inventario/insumos/ingresar_insumo.html', context)
 
 @login_required(login_url='login')
 def eliminar_in(request, insumo_id):
@@ -251,7 +251,7 @@ def eliminar_in(request, insumo_id):
         'grupo': grupo
     }
 
-    return render(request, 'inventary/insumos/eliminar_insumo.html', context)
+    return render(request, 'inventario/insumos/eliminar_insumo.html', context)
 
 @login_required(login_url='login')
 def editar_in(request, insumo_id):
@@ -272,7 +272,7 @@ def editar_in(request, insumo_id):
         'grupo': grupo
     }
 
-    return render(request, 'inventary/insumos/editar_insumo.html', context)
+    return render(request, 'inventario/insumos/editar_insumo.html', context)
 
 ##################################### METODOS PRODUCTO #####################################
 @login_required(login_url='login')
@@ -287,7 +287,7 @@ def crud_producto(request):
         'grupo': grupo
     }
 
-    return render(request, 'inventary/productos/crud_producto.html', context) 
+    return render(request, 'inventario/productos/crud_producto.html', context) 
 
 @login_required(login_url='login')
 def ingresar_producto(request):
@@ -306,7 +306,7 @@ def ingresar_producto(request):
         'form': form,
         'grupo': grupo
     }
-    return render(request,'inventary/productos/ingresar_producto.html', context)
+    return render(request,'inventario/productos/ingresar_producto.html', context)
 
 @login_required(login_url='login')
 def editar_producto(request, producto_id):
@@ -327,7 +327,7 @@ def editar_producto(request, producto_id):
         'grupo': grupo
     }
 
-    return render(request, 'inventary/productos/editar_producto.html', context)
+    return render(request, 'inventario/productos/editar_producto.html', context)
 
 @login_required(login_url='login')
 def eliminar_producto(request, producto_id):
@@ -344,7 +344,7 @@ def eliminar_producto(request, producto_id):
         'grupo': grupo
     }
 
-    return render(request, 'inventary/productos/eliminar_producto.html', context)
+    return render(request, 'inventario/productos/eliminar_producto.html', context)
 
 ##################################### METODOS PRODUCTO COPEC #####################################
 @login_required(login_url='login')
@@ -359,7 +359,7 @@ def crud_producto_copec(request):
         'grupo': grupo
     }
 
-    return render(request, 'inventary/prod_copec/crud_producto_copec.html', context) 
+    return render(request, 'inventario/prod_copec/crud_producto_copec.html', context) 
 
 @login_required(login_url='login')
 def ingresar_producto_copec(request):
@@ -379,7 +379,7 @@ def ingresar_producto_copec(request):
         'grupo': grupo
     }
 
-    return render(request,'inventary/prod_copec/ingresar_producto_copec.html', context)
+    return render(request,'inventario/prod_copec/ingresar_producto_copec.html', context)
 
 @login_required(login_url='login')
 def editar_producto_copec(request, prod_copec_id):
@@ -400,7 +400,7 @@ def editar_producto_copec(request, prod_copec_id):
         'grupo': grupo
     }
 
-    return render(request, 'inventary/prod_copec/editar_producto_copec.html', context)
+    return render(request, 'inventario/prod_copec/editar_producto_copec.html', context)
 
 @login_required(login_url='login')
 def eliminar_producto_copec(request, prod_copec_id):
@@ -417,7 +417,7 @@ def eliminar_producto_copec(request, prod_copec_id):
         'grupo': grupo
     }
 
-    return render(request, 'inventary/prod_copec/eliminar_producto_copec.html', context)
+    return render(request, 'inventario/prod_copec/eliminar_producto_copec.html', context)
 
 ##################################### METODOS COMPOSICION #####################################
 @login_required(login_url='login')
@@ -441,7 +441,7 @@ def crud_comp(request):
         'grupo': grupo
     }
 
-    return render(request,'inventary/comp_producto/crud_comp.html', context) 
+    return render(request,'inventario/comp_producto/crud_comp.html', context) 
 
 @login_required(login_url='login')
 def ingresar_comp(request):
@@ -461,7 +461,7 @@ def ingresar_comp(request):
         'grupo': grupo
     }
 
-    return render(request, 'inventary/comp_producto/ingresar_comp.html', context)
+    return render(request, 'inventario/comp_producto/ingresar_comp.html', context)
 
 @login_required(login_url='login')
 def editar_comp(request, comp_producto_id):
@@ -482,7 +482,7 @@ def editar_comp(request, comp_producto_id):
         'grupo': grupo
     }
 
-    return render(request, 'inventary/comp_producto/editar_comp.html', context)
+    return render(request, 'inventario/comp_producto/editar_comp.html', context)
 
 @login_required(login_url='login')
 def eliminar_comp(request, comp_producto_id):
@@ -496,7 +496,7 @@ def eliminar_comp(request, comp_producto_id):
         'composicion': composicion,
         'grupo': request.user.groups.first()
     }
-    return render(request, 'inventary/comp_producto/eliminar_comp.html', context)
+    return render(request, 'inventario/comp_producto/eliminar_comp.html', context)
 
 ##################################### METODOS STOCK MP #####################################
 @permission_required('inventario.can_access_crud_stock_mp', raise_exception=True)
@@ -507,7 +507,7 @@ def crud_stock_mp(request):
         'grupo': request.user.groups.first(),
         'stockmps': StockAditivo.objects.all()
     }
-    return render(request, 'inventary/stock_mp/crud_stock_mp.html', context) 
+    return render(request, 'inventario/stock_mp/crud_stock_mp.html', context) 
 
 @login_required(login_url='login')
 def ingresar_stock_mp(request):
@@ -525,7 +525,7 @@ def ingresar_stock_mp(request):
         'grupo': request.user.groups.first()
     }
 
-    return render(request, 'inventary/stock_mp/ingresar_stock_mp.html', context)
+    return render(request, 'inventario/stock_mp/ingresar_stock_mp.html', context)
 
 @login_required(login_url='login')
 def editar_stock_mp(request, stock_ad_id):
@@ -544,7 +544,7 @@ def editar_stock_mp(request, stock_ad_id):
         'grupo': request.user.groups.first()
     }
 
-    return render(request, 'inventary/stock_mp/editar_stock_mp.html', context)
+    return render(request, 'inventario/stock_mp/editar_stock_mp.html', context)
 
 def agregar_stock_mp(request):
     if request.method == 'POST':
@@ -575,7 +575,7 @@ def crud_stock_prod(request):
         'grupo': request.user.groups.first()
     }
 
-    return render(request, 'inventary/stock_producto/crud_stock_prod.html', context) 
+    return render(request, 'inventario/stock_producto/crud_stock_prod.html', context) 
 
 @login_required(login_url='login')
 def ingresar_stock_prod(request):
@@ -593,7 +593,7 @@ def ingresar_stock_prod(request):
         'grupo': request.user.groups.first()
     }
 
-    return render(request, 'inventary/stock_producto/ingresar_stock_prod.html', context)
+    return render(request, 'inventario/stock_producto/ingresar_stock_prod.html', context)
 
 @login_required(login_url='login')
 def editar_stock_prod(request, stock_producto_id):
@@ -612,7 +612,7 @@ def editar_stock_prod(request, stock_producto_id):
         'grupo': request.user.groups.first()
     }
 
-    return render(request, 'inventary/stock_producto/editar_stock_prod.html', context)
+    return render(request, 'inventario/stock_producto/editar_stock_prod.html', context)
 
 ##################################### METODOS STOCK INSUMO #####################################
 @permission_required('inventario.can_access_crud_stock_insumo', raise_exception=True)
@@ -622,7 +622,7 @@ def crud_stock_insumo(request):
         'grupo': request.user.groups.first(),
         'stockinsus': StockInsumo.objects.all()
     }
-    return render(request, 'inventary/stock_insumo/crud_stock_insumo.html', context) 
+    return render(request, 'inventario/stock_insumo/crud_stock_insumo.html', context) 
 
 @login_required(login_url='login')
 def ingresar_stock_insumo(request):
@@ -640,7 +640,7 @@ def ingresar_stock_insumo(request):
         'grupo': request.user.groups.first()
     }
 
-    return render(request, 'inventary/stock_insumo/ingresar_stock_insumo.html', context)
+    return render(request, 'inventario/stock_insumo/ingresar_stock_insumo.html', context)
 
 @login_required(login_url='login')
 def editar_stock_insumo(request, stock_in_id):
@@ -659,7 +659,7 @@ def editar_stock_insumo(request, stock_in_id):
         'grupo': request.user.groups.first()
     }
 
-    return render(request, 'inventary/stock_insumo/editar_stock_insumo.html', context)
+    return render(request, 'inventario/stock_insumo/editar_stock_insumo.html', context)
 
 def agregar_stock_insumo(request):
     if request.method == 'POST':
