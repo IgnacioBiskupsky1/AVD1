@@ -111,9 +111,27 @@ def logout_view(request):
 #@allowed_users(allowed_roles=['GESTION'])
 def home(request):
 
+    user = request.user
+
+    if user.groups.exists():
+        group = user.groups.first().name
+
+        if group == 'GESTION':
+            return redirect('/crud_orden_prod')
+        elif group == 'PATIO':
+            return redirect('/crud_despacho')
+        elif group == 'CALIDAD':
+            return redirect('/crud_calidad')
+        elif group == 'GUIA_DESP':
+            return redirect('/crud_guia_despacho')
+        else:
+            return redirect('/home')
+        
+    grupo = request.user.groups.first()
+
     context = {
         'username': request.user.username,
-        'grupo': request.user.groups.first()
+        'grupo': grupo
     }
 
     return render(request, 'usercrud/welcome_user.html', context)
