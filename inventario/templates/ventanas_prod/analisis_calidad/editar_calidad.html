@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
-{% block titulo %}Editar Orden de Producción{% endblock %}
+{% block titulo %}Editar Datos de Calidad{% endblock %}
 
 {% block contenido %}
-<h2>Editar Orden de Producción</h2>
+<h2>Editar Datos de Calidad</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
