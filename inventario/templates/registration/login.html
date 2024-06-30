@@ -1,34 +1,20 @@
 {% load static %}
 <html lang="en">
-<head>
-    <title>LoginAuth</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
-</head>
-<body>
-    <div class="col">
-        <div class="row">
-        <form method="post" action="{% url 'login' %}">
-            {% csrf_token %}
-            <h2>Iniciar sesión</h2>
-            <div>
-                <label for="id_username">Usuario:</label>
-                <input type="text" name="username" id="id_username" required>
+    <head>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}"/>
+    </head>
+    <div class="body"></div>
+            <div class="grad"></div>
+            <div class="header">
+                <div>Valle<span>Dorado</span></div>
             </div>
-            <div>
-                <label for="id_password">Contraseña:</label>
-                <input type="password" name="password" id="id_password" required>
+            <br>
+            <div class="login">
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <input type="text" placeholder="Usuario" name="username"><br>
+                    <input type="password" placeholder="Contraseña" name="password"><br>
+                    <input class="button" type="submit" value="Ingresar">
+                </form>
             </div>
-            <button type="submit">Iniciar sesión</button>
-        </form>
-        </div>    
-        {% if form.errors %}
-        <div class="row">
-            <p>El nombre de usuario o la contraseña son incorrectos.</p>
-        </div>        
-        {% endif %}
-    </div>
-            
-</body>
 </html>
